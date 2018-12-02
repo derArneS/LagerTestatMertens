@@ -1,27 +1,23 @@
 package lager.view;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
+import javax.swing.JTree;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
+import javax.swing.tree.TreeModel;
 
 import lager.controller.Controller;
-import lager.model.WarehouseTableModel;
 
 @SuppressWarnings("serial")
 public class View extends JFrame {
@@ -36,9 +32,8 @@ public class View extends JFrame {
 	private JButton clearSelectionWarehouse = new JButton("Auswahl loeschen");
 	private JPanel controls = new JPanel();
 	private JPanel visualization = new JPanel();
-	private JScrollPane warehousesPane = new JScrollPane();
 	private JScrollPane bookingsPane = new JScrollPane();
-	private JTable warehouses = new JTable();
+	private JTree warehouses = new JTree();
 	private JTable bookings = new JTable();
 
 	public View(Controller controller, String titel) {
@@ -59,13 +54,12 @@ public class View extends JFrame {
 		controls.add(delWarehouse);
 		controls.add(newBooking);
 
-		warehousesPane.getViewport().add(warehouses);
-		warehouses.setFillsViewportHeight(true);
-		warehouses.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		warehouses.setRootVisible(false);
+
 		bookingsPane.getViewport().add(bookings);
 		bookings.setFillsViewportHeight(true);
 
-		visualization.add(warehousesPane);
+		visualization.add(warehouses);
 		visualization.add(clearSelectionWarehouse);
 		visualization.add(bookingsPane);
 
@@ -128,49 +122,6 @@ public class View extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (warehouses.getSelectionModel().isSelectionEmpty()) {
-					JPanel optionPane = new JPanel();
-					JTextField name = new JTextField();
-					name.setPreferredSize(new Dimension(100, 50));
-					JTextField capacity = new JTextField();
-					capacity.setPreferredSize(new Dimension(100, 50));
-
-					optionPane.add(new JLabel("Name:"));
-					optionPane.add(name);
-					optionPane.add(Box.createHorizontalStrut(15));
-					optionPane.add(new JLabel("Kapazitaet:"));
-					optionPane.add(capacity);
-
-					try {
-						int result = JOptionPane.showConfirmDialog(null, optionPane,
-								"Bitte Name und Kapazitaet eingeben", JOptionPane.OK_CANCEL_OPTION);
-						if (result == JOptionPane.OK_OPTION) {
-							WarehouseTableModel model = (WarehouseTableModel) warehouses.getModel();
-							controller.newWarehouse(name.getText(), Integer.valueOf(capacity.getText()));
-						}
-					} catch (Exception e2) {
-						// TODO: handle exception
-					}
-				} else {
-					JPanel optionPane = new JPanel();
-					JTextField name = new JTextField();
-					name.setPreferredSize(new Dimension(100, 50));
-
-					optionPane.add(new JLabel("Name:"));
-					optionPane.add(name);
-
-					try {
-						int result = JOptionPane.showConfirmDialog(null, optionPane, "Bitte Name eingeben",
-								JOptionPane.OK_CANCEL_OPTION);
-						if (result == JOptionPane.OK_OPTION) {
-							WarehouseTableModel model = (WarehouseTableModel) warehouses.getModel();
-							controller.newWarehouse(name.getText(),
-									model.getWarehouseAtRow(warehouses.getSelectedRow()));
-						}
-					} catch (Exception e2) {
-						// TODO: handle exception
-					}
-				}
 
 			}
 		});
@@ -195,7 +146,6 @@ public class View extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				warehouses.getSelectionModel().clearSelection();
 			}
 		});
 
@@ -207,11 +157,15 @@ public class View extends JFrame {
 		this.setVisible(true);
 	}
 
-	public void setWarehouseModel(TableModel model) {
+	public void setWarehouseModel(TreeModel model) {
 		warehouses.setModel(model);
 	}
 
 	public void setBookingsModel(TableModel model) {
 		bookings.setModel(model);
+	}
+
+	public void updateUI() {
+		warehouses.updateUI();
 	}
 }
