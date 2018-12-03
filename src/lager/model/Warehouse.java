@@ -1,16 +1,14 @@
 package lager.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Warehouse {
 	private String name;
 	private int capacity;
-	private List<Warehouse> children = new ArrayList<>();
+	private WarehouseNode warehouseNode;
 
 	public Warehouse(String name, int capacity) {
 		this.name = name;
 		this.capacity = capacity;
+		warehouseNode = new WarehouseNode(this);
 	}
 
 	@Override
@@ -18,20 +16,17 @@ public class Warehouse {
 		return name;
 	}
 
-	public void addChild(Warehouse child) {
-		children.add(child);
+	public WarehouseNode getNode() {
+		return warehouseNode;
+
 	}
 
-	public int getChildCount() {
-		return children.size();
+	public int getCapacity() {
+		return capacity;
 	}
 
-	public Warehouse getChild(int index) {
-		return children.get(index);
-	}
-
-	public int getIndexOfChild(Warehouse child) {
-		return children.indexOf(child);
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
 	}
 
 }

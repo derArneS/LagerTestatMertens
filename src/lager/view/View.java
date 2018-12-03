@@ -18,6 +18,7 @@ import javax.swing.table.TableModel;
 import javax.swing.tree.TreeModel;
 
 import lager.controller.Controller;
+import lager.model.WarehouseNode;
 
 @SuppressWarnings("serial")
 public class View extends JFrame {
@@ -130,7 +131,8 @@ public class View extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				controller.removeWarehouse(
+						((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse());
 			}
 		});
 

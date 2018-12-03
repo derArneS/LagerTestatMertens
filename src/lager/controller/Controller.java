@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 
 import lager.model.BookingsTableModel;
 import lager.model.Warehouse;
+import lager.model.WarehouseNode;
 import lager.model.WarehouseTreeModel;
 import lager.view.View;
 
@@ -15,11 +16,12 @@ public class Controller {
 	private View view;
 	private WarehouseTreeModel warehouseTreeModel;
 	private BookingsTableModel bookingsTableModel;
+	private WarehouseNode rootNode = new WarehouseNode(new Warehouse("root", 0));
 
 	public Controller() {
 		view = new View(this, "Lagersimulator");
 
-		warehouseTreeModel = new WarehouseTreeModel();
+		warehouseTreeModel = new WarehouseTreeModel(rootNode);
 		rewire(warehouseTreeModel, new BookingsTableModel());
 		prestart();
 	}
@@ -36,26 +38,29 @@ public class Controller {
 		Warehouse brandenburg = new Warehouse("Brandenburg", 0);
 		Warehouse mv = new Warehouse("MV", 0);
 
-		deutschland.addChild(niedersachsen);
-		niedersachsen.addChild(hannoverMisburg);
-		niedersachsen.addChild(nienburg);
-		deutschland.addChild(nrw);
-		deutschland.addChild(bremen);
-		deutschland.addChild(hessen);
-		deutschland.addChild(sachsen);
-		deutschland.addChild(brandenburg);
-		deutschland.addChild(mv);
+		rootNode.insert(deutschland.getNode());
+		deutschland.getNode().insert(niedersachsen.getNode());
+		niedersachsen.getNode().insert(hannoverMisburg.getNode());
+		niedersachsen.getNode().insert(nienburg.getNode());
+		deutschland.getNode().insert(nrw.getNode());
+		deutschland.getNode().insert(bremen.getNode());
+		deutschland.getNode().insert(hessen.getNode());
+		deutschland.getNode().insert(sachsen.getNode());
+		deutschland.getNode().insert(brandenburg.getNode());
+		deutschland.getNode().insert(mv.getNode());
 
-		warehouseTreeModel.addWarehouse(deutschland, 0);
-		warehouseTreeModel.addWarehouse(niedersachsen);
-		warehouseTreeModel.addWarehouse(hannoverMisburg);
-		warehouseTreeModel.addWarehouse(nienburg);
-		warehouseTreeModel.addWarehouse(nrw);
-		warehouseTreeModel.addWarehouse(bremen);
-		warehouseTreeModel.addWarehouse(hessen);
-		warehouseTreeModel.addWarehouse(sachsen);
-		warehouseTreeModel.addWarehouse(brandenburg);
-		warehouseTreeModel.addWarehouse(mv);
+//		warehouseTreeModel.addWarehouse(deutschland, rootNode);
+//		warehouseTreeModel.addWarehouse(niedersachsen, deutschland.getNode());
+//		warehouseTreeModel.addWarehouse(hannoverMisburg, niedersachsen.getNode());
+//		warehouseTreeModel.addWarehouse(nienburg, deutschland.getNode());
+//		warehouseTreeModel.addWarehouse(nrw, deutschland.getNode());
+//		warehouseTreeModel.addWarehouse(bremen, deutschland.getNode());
+//		warehouseTreeModel.addWarehouse(hessen, deutschland.getNode());
+//		warehouseTreeModel.addWarehouse(sachsen, deutschland.getNode());
+//		warehouseTreeModel.addWarehouse(brandenburg, deutschland.getNode());
+//		warehouseTreeModel.addWarehouse(mv, deutschland.getNode());
+
+		warehouseTreeModel.reload();
 
 	}
 
@@ -85,6 +90,15 @@ public class Controller {
 
 		rewire(warehouseTableModel, bookingsTableModel);
 		ois.close();
+	}
+
+	public void removeWarehouse(Warehouse warehouse) {
+		for (WarehouseNode n : warehouse.getNode().getChildren().values()) {
+			((WarehouseNode) warehouse.getNode().getParent()).insert(n);
+		}
+
+		((WarehouseNode) warehouse.getNode().getParent()).remove(warehouse.getNode());
+		warehouseTreeModel.reload();
 	}
 
 }
