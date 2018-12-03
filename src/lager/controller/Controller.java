@@ -96,9 +96,15 @@ public class Controller {
 		for (WarehouseNode n : warehouse.getNode().getChildren().values()) {
 			((WarehouseNode) warehouse.getNode().getParent()).insert(n);
 		}
+//		((WarehouseNode) warehouse.getNode().getParent()).remove(warehouse.getNode());
+//		warehouseTreeModel.reload();
 
-		((WarehouseNode) warehouse.getNode().getParent()).remove(warehouse.getNode());
-		warehouseTreeModel.reload();
+		warehouseTreeModel.removeNodeFromParent(warehouse.getNode());
+
+//		int i[] = { warehouse.getNode().getParent().getIndex(warehouse.getNode()) };
+//		Object o[] = { warehouse.getNode() };
+//		warehouseTreeModel.nodesWereRemoved(warehouse.getNode().getParent(), i, o);
+
 	}
 
 }

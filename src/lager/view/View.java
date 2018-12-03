@@ -33,6 +33,7 @@ public class View extends JFrame {
 	private JButton clearSelectionWarehouse = new JButton("Auswahl loeschen");
 	private JPanel controls = new JPanel();
 	private JPanel visualization = new JPanel();
+	private JScrollPane warehousesPane = new JScrollPane();
 	private JScrollPane bookingsPane = new JScrollPane();
 	private JTree warehouses = new JTree();
 	private JTable bookings = new JTable();
@@ -57,10 +58,11 @@ public class View extends JFrame {
 
 		warehouses.setRootVisible(false);
 
+		warehousesPane.getViewport().add(warehouses);
 		bookingsPane.getViewport().add(bookings);
 		bookings.setFillsViewportHeight(true);
 
-		visualization.add(warehouses);
+		visualization.add(warehousesPane);
 		visualization.add(clearSelectionWarehouse);
 		visualization.add(bookingsPane);
 
