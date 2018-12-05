@@ -1,5 +1,6 @@
 package lager.view;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -8,10 +9,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
@@ -125,7 +128,39 @@ public class View extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Object[] options1 = { "Weiter", "Zurück" };
 
+				JPanel panel = new JPanel();
+				panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+				JPanel panelName = new JPanel();
+				JLabel labelName = new JLabel("Name: ");
+				labelName.setPreferredSize(new Dimension(75, 20));
+				JTextField textFieldName = new JTextField(10);
+				ObservableKeyListener oKLName = new ObservableKeyListener();
+				oKLName.addObserver(null);
+				textFieldName.addKeyListener(oKLName);
+
+				panelName.add(labelName);
+				panelName.add(textFieldName);
+				panel.add(panelName);
+
+				JPanel panelCapacity = new JPanel();
+				JLabel labelCapacity = new JLabel("Kapazität: ");
+				labelCapacity.setPreferredSize(new Dimension(75, 20));
+				JTextField textFieldCapacity = new JTextField(10);
+				panelCapacity.add(labelCapacity);
+				panelCapacity.add(textFieldCapacity);
+				panel.add(panelCapacity);
+
+				int result = JOptionPane.showOptionDialog(null, panel, "Enter a Number", JOptionPane.OK_CANCEL_OPTION,
+						JOptionPane.PLAIN_MESSAGE, null, options1, null);
+				if (result == JOptionPane.OK_OPTION) {
+				}
+
+//				controller.addWarehouse(
+//						((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse());
+//				warehouses.updateUI();
 			}
 		});
 
@@ -135,6 +170,7 @@ public class View extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				controller.removeWarehouse(
 						((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse());
+				warehouses.updateUI();
 			}
 		});
 

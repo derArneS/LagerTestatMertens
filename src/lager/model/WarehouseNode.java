@@ -22,7 +22,7 @@ public class WarehouseNode implements MutableTreeNode {
 
 	@Override
 	public TreeNode getChildAt(int childIndex) {
-		return map.get(childIndex);
+		return map.get(map.keySet().toArray()[childIndex]);
 	}
 
 	@Override

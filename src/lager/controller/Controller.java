@@ -16,7 +16,7 @@ public class Controller {
 	private View view;
 	private WarehouseTreeModel warehouseTreeModel;
 	private BookingsTableModel bookingsTableModel;
-	private WarehouseNode rootNode = new WarehouseNode(new Warehouse("root", 0));
+	private WarehouseNode rootNode = new Warehouse("root", 0).getNode();
 
 	public Controller() {
 		view = new View(this, "Lagersimulator");
@@ -96,14 +96,12 @@ public class Controller {
 		for (WarehouseNode n : warehouse.getNode().getChildren().values()) {
 			((WarehouseNode) warehouse.getNode().getParent()).insert(n);
 		}
-//		((WarehouseNode) warehouse.getNode().getParent()).remove(warehouse.getNode());
-//		warehouseTreeModel.reload();
 
 		warehouseTreeModel.removeNodeFromParent(warehouse.getNode());
 
-//		int i[] = { warehouse.getNode().getParent().getIndex(warehouse.getNode()) };
-//		Object o[] = { warehouse.getNode() };
-//		warehouseTreeModel.nodesWereRemoved(warehouse.getNode().getParent(), i, o);
+	}
+
+	public void addWarehouse(Warehouse warehouse) {
 
 	}
 
