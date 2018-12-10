@@ -3,16 +3,21 @@ package lager.model;
 public class Warehouse {
 	private String name;
 	private int capacity;
+	private int stock;
 	private WarehouseNode warehouseNode;
 
 	public Warehouse(String name, int capacity) {
 		this.name = name;
 		this.capacity = capacity;
 		warehouseNode = new WarehouseNode(this);
+		stock = 0;
 	}
 
 	@Override
 	public String toString() {
+		if (getNode().getChildCount() == 0) {
+			return name + " " + stock + "/" + capacity;
+		}
 		return name;
 	}
 
@@ -27,6 +32,41 @@ public class Warehouse {
 
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
+	}
+
+	public int getStock() {
+		return stock;
+	}
+
+	public int getChildStock() {
+		WarehouseNode node = getNode();
+		int tempStock = 0;
+
+		if (node.getChildCount() != 0) {
+			for (WarehouseNode w : getNode().getChildren().values()) {
+				tempStock += w.getWarehouse().getChildStock();
+			}
+		} else {
+			tempStock += stock;
+		}
+
+		return tempStock;
+	}
+
+	public void setStock(int stock) {
+		this.stock = stock;
+	}
+
+	public void addToStock(int stocking) {
+		stock += stocking;
+	}
+
+	public void addToCapacity(int addCap) {
+		capacity += addCap;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

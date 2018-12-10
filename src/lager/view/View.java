@@ -1,6 +1,7 @@
 package lager.view;
 
 import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -16,11 +17,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
 import javax.swing.tree.TreeModel;
 
 import lager.controller.Controller;
+import lager.model.Warehouse;
 import lager.model.WarehouseNode;
 
 @SuppressWarnings("serial")
@@ -28,18 +31,20 @@ public class View extends JFrame {
 	private Controller controller;
 	private JButton save = new JButton("Speichern");
 	private JButton open = new JButton("Oeffnen");
-	private JButton undo = new JButton("Undo");
-	private JButton redo = new JButton("Redo");
 	private JButton newWarehouse = new JButton("Neues Lager");
 	private JButton delWarehouse = new JButton("Lager loeschen");
 	private JButton newBooking = new JButton("Neue Lieferung");
 	private JButton clearSelectionWarehouse = new JButton("Auswahl loeschen");
+	private JButton changeName = new JButton("Name ändern");
+	private JButton stock = new JButton("Bestand anzeigen");
 	private JPanel controls = new JPanel();
 	private JPanel visualization = new JPanel();
 	private JScrollPane warehousesPane = new JScrollPane();
 	private JScrollPane bookingsPane = new JScrollPane();
 	private JTree warehouses = new JTree();
 	private JTable bookings = new JTable();
+
+	private String buttonCheck = "DEFAULT";
 
 	public View(Controller controller, String titel) {
 		super(titel);
@@ -53,11 +58,11 @@ public class View extends JFrame {
 
 		controls.add(save);
 		controls.add(open);
-		controls.add(undo);
-		controls.add(redo);
 		controls.add(newWarehouse);
 		controls.add(delWarehouse);
 		controls.add(newBooking);
+		controls.add(changeName);
+		controls.add(stock);
 
 		warehouses.setRootVisible(false);
 
@@ -108,59 +113,79 @@ public class View extends JFrame {
 			}
 		});
 
-		undo.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
-
-		redo.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
-
 		newWarehouse.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Object[] options1 = { "Weiter", "Zurück" };
+				if (warehouses.getSelectionCount() == 0) {
+					JOptionPane.showMessageDialog(null, "Kein Lager ausgewählt", "Kein Lager",
+							JOptionPane.INFORMATION_MESSAGE);
+				} else {
 
-				JPanel panel = new JPanel();
-				panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+					buttonCheck = "DEFAULT";
+					ObserverButton weiter = new ObserverButton("Weiter");
+					weiter.addActionListener(new ActionListener() {
 
-				JPanel panelName = new JPanel();
-				JLabel labelName = new JLabel("Name: ");
-				labelName.setPreferredSize(new Dimension(75, 20));
-				JTextField textFieldName = new JTextField(10);
-				ObservableKeyListener oKLName = new ObservableKeyListener();
-				oKLName.addObserver(null);
-				textFieldName.addKeyListener(oKLName);
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							Window w = SwingUtilities.getWindowAncestor(weiter);
+							w.dispose();
+							buttonCheck = "WEITER";
+						}
+					});
 
-				panelName.add(labelName);
-				panelName.add(textFieldName);
-				panel.add(panelName);
+					ObserverButton back = new ObserverButton("Zurück");
+					back.addActionListener(new ActionListener() {
 
-				JPanel panelCapacity = new JPanel();
-				JLabel labelCapacity = new JLabel("Kapazität: ");
-				labelCapacity.setPreferredSize(new Dimension(75, 20));
-				JTextField textFieldCapacity = new JTextField(10);
-				panelCapacity.add(labelCapacity);
-				panelCapacity.add(textFieldCapacity);
-				panel.add(panelCapacity);
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							Window w = SwingUtilities.getWindowAncestor(back);
+							w.dispose();
+						}
+					});
 
-				int result = JOptionPane.showOptionDialog(null, panel, "Enter a Number", JOptionPane.OK_CANCEL_OPTION,
-						JOptionPane.PLAIN_MESSAGE, null, options1, null);
-				if (result == JOptionPane.OK_OPTION) {
+					ObserverButton[] options = { weiter, back };
+
+					JPanel panel = new JPanel();
+					panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+					JPanel panelName = new JPanel();
+					JLabel labelName = new JLabel("Name: ");
+					labelName.setPreferredSize(new Dimension(75, 20));
+					JTextField textFieldName = new JTextField(10);
+
+					ObservableKeyListener oKLName = new ObservableKeyListener(textFieldName, "NAME");
+					oKLName.addObserver(options[0]);
+					textFieldName.addKeyListener(oKLName);
+
+					panelName.add(labelName);
+					panelName.add(textFieldName);
+					panel.add(panelName);
+
+					JPanel panelCapacity = new JPanel();
+					JLabel labelCapacity = new JLabel("Kapazität: ");
+					labelCapacity.setPreferredSize(new Dimension(75, 20));
+					JTextField textFieldCapacity = new JTextField(10);
+
+					ObservableKeyListener oKLCapacity = new ObservableKeyListener(textFieldCapacity, "CAPACITY");
+					oKLCapacity.addObserver(options[0]);
+					textFieldCapacity.addKeyListener(oKLCapacity);
+
+					panelCapacity.add(labelCapacity);
+					panelCapacity.add(textFieldCapacity);
+					panel.add(panelCapacity);
+
+					JOptionPane.showOptionDialog(View.this, panel, "Enter a Number", JOptionPane.OK_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE, null, options, null);
+
+					if (buttonCheck.equals("WEITER")) {
+						controller.addWarehouse(
+								((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse(),
+								textFieldName.getText(), Integer.valueOf(textFieldCapacity.getText()));
+						warehouses.updateUI();
+					}
+
 				}
-
-//				controller.addWarehouse(
-//						((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse());
-//				warehouses.updateUI();
 			}
 		});
 
@@ -178,7 +203,7 @@ public class View extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				controller.newBooking();
 			}
 		});
 
@@ -186,6 +211,37 @@ public class View extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+			}
+		});
+
+		changeName.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (warehouses.getSelectionCount() != 0) {
+					String name = JOptionPane.showInputDialog(View.this, "Neuen Namen für das Lager eingeben",
+							"Namen ändern", JOptionPane.QUESTION_MESSAGE);
+					((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse().setName(name);
+				} else {
+					JOptionPane.showMessageDialog(null, "Kein Lager ausgewählt", "Kein Lager",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
+
+		stock.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (warehouses.getSelectionCount() != 0) {
+					Warehouse w = ((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse();
+					JOptionPane.showMessageDialog(View.this, w.getChildStock(), "Bestand",
+							JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(null, "Kein Lager ausgewählt", "Kein Lager",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+
 			}
 		});
 

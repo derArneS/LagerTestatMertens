@@ -49,17 +49,6 @@ public class Controller {
 		deutschland.getNode().insert(brandenburg.getNode());
 		deutschland.getNode().insert(mv.getNode());
 
-//		warehouseTreeModel.addWarehouse(deutschland, rootNode);
-//		warehouseTreeModel.addWarehouse(niedersachsen, deutschland.getNode());
-//		warehouseTreeModel.addWarehouse(hannoverMisburg, niedersachsen.getNode());
-//		warehouseTreeModel.addWarehouse(nienburg, deutschland.getNode());
-//		warehouseTreeModel.addWarehouse(nrw, deutschland.getNode());
-//		warehouseTreeModel.addWarehouse(bremen, deutschland.getNode());
-//		warehouseTreeModel.addWarehouse(hessen, deutschland.getNode());
-//		warehouseTreeModel.addWarehouse(sachsen, deutschland.getNode());
-//		warehouseTreeModel.addWarehouse(brandenburg, deutschland.getNode());
-//		warehouseTreeModel.addWarehouse(mv, deutschland.getNode());
-
 		warehouseTreeModel.reload();
 
 	}
@@ -101,7 +90,20 @@ public class Controller {
 
 	}
 
-	public void addWarehouse(Warehouse warehouse) {
+	public void addWarehouse(Warehouse warehouse, String name, int capacity) {
+		Warehouse newWarehouse = new Warehouse(name, capacity);
+
+		if (warehouse.getNode().getChildCount() == 0) {
+			newWarehouse.addToCapacity(warehouse.getCapacity());
+			newWarehouse.addToStock(warehouse.getStock());
+			warehouse.setStock(0);
+		}
+
+		warehouse.getNode().insert(newWarehouse.getNode());
+
+	}
+
+	public void newBooking() {
 
 	}
 
