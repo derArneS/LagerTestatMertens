@@ -57,8 +57,12 @@ public class Warehouse {
 		this.stock = stock;
 	}
 
-	public void addToStock(int stocking) {
+	public boolean addToStock(int stocking) {
+		if (stock + stocking > capacity)
+			return false;
 		stock += stocking;
+		return true;
+
 	}
 
 	public void addToCapacity(int addCap) {

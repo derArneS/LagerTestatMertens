@@ -6,23 +6,29 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import lager.model.BookingsTableModel;
+import javax.swing.JTree;
+
+import lager.model.DeliveriesTableModel;
+import lager.model.ObservableStack;
 import lager.model.Warehouse;
 import lager.model.WarehouseNode;
 import lager.model.WarehouseTreeModel;
+import lager.view.NewLagerWindow;
 import lager.view.View;
 
 public class Controller {
 	private View view;
 	private WarehouseTreeModel warehouseTreeModel;
-	private BookingsTableModel bookingsTableModel;
+	private DeliveriesTableModel bookingsTableModel;
 	private WarehouseNode rootNode = new Warehouse("root", 0).getNode();
+	private ObservableStack undoStack = new ObservableStack();
+	private ObservableStack redoStack = new ObservableStack();
 
 	public Controller() {
 		view = new View(this, "Lagersimulator");
 
 		warehouseTreeModel = new WarehouseTreeModel(rootNode);
-		rewire(warehouseTreeModel, new BookingsTableModel());
+		rewire(warehouseTreeModel, new DeliveriesTableModel());
 		prestart();
 	}
 
@@ -53,12 +59,12 @@ public class Controller {
 
 	}
 
-	private void rewire(WarehouseTreeModel warehouseTreeModel, BookingsTableModel bookingsTableModel) {
+	private void rewire(WarehouseTreeModel warehouseTreeModel, DeliveriesTableModel bookingsTableModel) {
 		this.warehouseTreeModel = warehouseTreeModel;
 		this.bookingsTableModel = bookingsTableModel;
 
 		view.setWarehouseModel(warehouseTreeModel);
-		view.setBookingsModel(bookingsTableModel);
+		view.setDeliveryModel(bookingsTableModel);
 	}
 
 	public void save(File file) throws Exception {
@@ -75,7 +81,7 @@ public class Controller {
 		ObjectInputStream ois = new ObjectInputStream(fis);
 
 		WarehouseTreeModel warehouseTableModel = ((WarehouseTreeModel) ois.readObject());
-		BookingsTableModel bookingsTableModel = ((BookingsTableModel) ois.readObject());
+		DeliveriesTableModel bookingsTableModel = ((DeliveriesTableModel) ois.readObject());
 
 		rewire(warehouseTableModel, bookingsTableModel);
 		ois.close();
@@ -87,6 +93,21 @@ public class Controller {
 		}
 
 		warehouseTreeModel.removeNodeFromParent(warehouse.getNode());
+
+	}
+
+	public void addWarehouse(JTree warehouses, View view) {
+		NewLagerWindow newLagerWindow = new NewLagerWindow(view);
+		if (newLagerWindow.optionPane()) {
+			if (warehouses.getSelectionCount() == 0) {
+				addWarehouse(((WarehouseNode) warehouses.getModel().getRoot()).getWarehouse(), newLagerWindow.getName(),
+						newLagerWindow.getCapacity());
+			} else {
+
+				addWarehouse(((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse(),
+						newLagerWindow.getName(), newLagerWindow.getCapacity());
+			}
+		}
 
 	}
 
@@ -103,7 +124,7 @@ public class Controller {
 
 	}
 
-	public void newBooking() {
+	public void newDelivery() {
 
 	}
 
