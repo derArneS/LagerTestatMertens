@@ -3,6 +3,8 @@ package lager.view;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -38,8 +40,6 @@ public class View extends JFrame {
 	private JScrollPane deliveryPane = new JScrollPane();
 	private JTree warehouses = new JTree();
 	private JTable deliveries = new JTable();
-
-	private String buttonCheck = "DEFAULT";
 
 	public View(Controller controller, String titel) {
 		super(titel);
@@ -131,41 +131,7 @@ public class View extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ObserverButton weiter = new ObserverButton("Weiter");
-				weiter.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-					}
-				});
-
-				ObserverButton back = new ObserverButton("Zurueck");
-				back.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-					}
-				});
-
-				JButton cancel = new JButton("Abbrechen");
-				cancel.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-					}
-				});
-
-				Object[] options = { weiter, back, cancel };
-
-				JPanel panel = new JPanel();
-				panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-				JOptionPane.showOptionDialog(View.this, panel, "Neue Lieferung", JOptionPane.OK_CANCEL_OPTION,
-						JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-
-				if (buttonCheck.equals("WEITER")) {
-					controller.newDelivery();
-				}
+				controller.newDelivery(View.this);
 			}
 
 		});
@@ -227,5 +193,25 @@ public class View extends JFrame {
 
 	public void updateUI() {
 		warehouses.updateUI();
+	}
+
+	private List<Warehouse> allLeafs = new ArrayList<Warehouse>();
+
+	public Object[] getAllLeafs() {
+		getLeafs(((WarehouseNode) warehouses.getModel().getRoot()).getWarehouse());
+		return allLeafs.toArray();
+	}
+
+	private void getLeafs(Warehouse warehouse) {
+		WarehouseNode node = warehouse.getNode();
+
+		if (node.isLeaf()) {
+			allLeafs.add(warehouse);
+		} else {
+			for (WarehouseNode w : node.getChildren().values()) {
+				getLeafs(w.getWarehouse());
+			}
+		}
+
 	}
 }

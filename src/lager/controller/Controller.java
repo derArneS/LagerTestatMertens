@@ -13,6 +13,7 @@ import lager.model.ObservableStack;
 import lager.model.Warehouse;
 import lager.model.WarehouseNode;
 import lager.model.WarehouseTreeModel;
+import lager.view.Delivery;
 import lager.view.NewLagerWindow;
 import lager.view.View;
 
@@ -124,7 +125,17 @@ public class Controller {
 
 	}
 
-	public void newDelivery() {
+	public void newDelivery(View view) {
+		Delivery delivery = new Delivery(view);
+		int amount = delivery.amountPane();
+		if (amount > 0) {
+			for (int i = 0; i < 5; i++) {
+				String bookingCheck = delivery.bookingPane();
+				if (bookingCheck.equals("CANCEL")) {
+					break;
+				}
+			}
+		}
 
 	}
 

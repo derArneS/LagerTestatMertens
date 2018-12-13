@@ -28,7 +28,6 @@ public class NewLagerWindow {
 	private ObservableKeyListener oKLCapacity = new ObservableKeyListener(textFieldCapacity, "CAPACITY");
 
 	public NewLagerWindow(View view) {
-		buttonCheck = "DEFAULT";
 		this.view = view;
 	}
 
