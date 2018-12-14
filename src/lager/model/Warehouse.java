@@ -1,6 +1,9 @@
 package lager.model;
 
-public class Warehouse {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Warehouse implements Serializable {
 	private String name;
 	private int capacity;
 	private int stock;

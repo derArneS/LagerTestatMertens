@@ -121,9 +121,14 @@ public class View extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.removeWarehouse(
-						((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse());
-				warehouses.updateUI();
+				if (warehouses.getSelectionCount() != 0) {
+					controller.removeWarehouse(
+							((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse());
+					warehouses.updateUI();
+				} else {
+					JOptionPane.showMessageDialog(View.this, "Kein Lager ausgewaehlt", "Kein Lager",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 		});
 
@@ -153,7 +158,7 @@ public class View extends JFrame {
 							"Namen aendern", JOptionPane.QUESTION_MESSAGE);
 					((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse().setName(name);
 				} else {
-					JOptionPane.showMessageDialog(null, "Kein Lager ausgewaehlt", "Kein Lager",
+					JOptionPane.showMessageDialog(View.this, "Kein Lager ausgewaehlt", "Kein Lager",
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
@@ -168,7 +173,7 @@ public class View extends JFrame {
 					JOptionPane.showMessageDialog(View.this, w.getChildStock(), "Bestand",
 							JOptionPane.INFORMATION_MESSAGE);
 				} else {
-					JOptionPane.showMessageDialog(null, "Kein Lager ausgewaehlt", "Kein Lager",
+					JOptionPane.showMessageDialog(View.this, "Kein Lager ausgewaehlt", "Kein Lager",
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 

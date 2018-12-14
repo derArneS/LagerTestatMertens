@@ -1,4 +1,4 @@
-package lager.view;
+package lager.view.lagerWindow;
 
 import java.awt.Dimension;
 import java.awt.Window;
@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+
+import lager.view.View;
 
 public class NewLagerWindow {
 	private String buttonCheck = "DEFAULT";

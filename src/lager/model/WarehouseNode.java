@@ -1,5 +1,6 @@
 package lager.model;
 
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +8,8 @@ import java.util.Map;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-public class WarehouseNode implements MutableTreeNode {
+@SuppressWarnings("serial")
+public class WarehouseNode implements MutableTreeNode, Serializable {
 	private Warehouse warehouse;
 	private Map<Integer, WarehouseNode> map = new HashMap<Integer, WarehouseNode>();
 	private WarehouseNode parent;
@@ -55,6 +57,7 @@ public class WarehouseNode implements MutableTreeNode {
 		return map.size() == 0;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Enumeration<? extends TreeNode> children() {
 		return (Enumeration<? extends TreeNode>) map.values();

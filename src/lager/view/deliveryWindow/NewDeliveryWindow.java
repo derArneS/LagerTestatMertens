@@ -1,6 +1,7 @@
-package lager.view;
+package lager.view.deliveryWindow;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,10 +15,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-public class Delivery {
+import lager.view.View;
+import lager.view.lagerWindow.ObservableKeyListener;
+
+public class NewDeliveryWindow {
 	View view;
 
-	public Delivery(View view) {
+	public NewDeliveryWindow(View view) {
 		this.view = view;
 	}
 
@@ -73,20 +77,33 @@ public class Delivery {
 	}
 
 	private String bookingCheck = "DEFAULT";
+	private int iteration = 1;
 
-	public String bookingPane() {
+	public String bookingPane(int amount) {
 		JPanel panel = new JPanel();
+		JPanel wrapper = new JPanel();
+		JPanel innerPanel = new JPanel();
+		JComboBox<Object> box = new JComboBox<Object>(view.getAllLeafs());
 		ObserverButton weiter = new ObserverButton("Weiter");
 		ObserverButton back = new ObserverButton("Zurueck");
+		box.setSelectedIndex(0);
+		ObservableComboBoxListener boxListener = new ObservableComboBoxListener(box);
+		ObserverJSlider slider = new ObserverJSlider(0, 100, 100, amount);
+		ObservableChangeListener sliderListener = new ObservableChangeListener(slider);
 		JButton cancel = new JButton("Abbrechen");
+		ObserverLabel currentAmount = new ObserverLabel("");
 
 		weiter.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Window w = SwingUtilities.getWindowAncestor(weiter);
-				w.dispose();
-				bookingCheck = "WEITER";
+				if (iteration == 5) {
+					Window w = SwingUtilities.getWindowAncestor(weiter);
+					w.dispose();
+					bookingCheck = "WEITER";
+				} else {
+					iteration++;
+				}
 			}
 		});
 
@@ -104,8 +121,24 @@ public class Delivery {
 
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		JComboBox<Object> box = new JComboBox<Object>(view.getAllLeafs());
-		panel.add(box);
+		panel.setPreferredSize(new Dimension(400, 100));
+		wrapper.setPreferredSize(new Dimension(250, 50));
+
+		slider.setMajorTickSpacing(10);
+		slider.setMinorTickSpacing(1);
+		slider.setPaintTicks(true);
+		slider.setPaintLabels(true);
+		slider.setSnapToTicks(true);
+		slider.setFont(new Font("Arial", Font.ITALIC, 15));
+		boxListener.addObserver(slider);
+		box.addActionListener(boxListener);
+		sliderListener.addObserver(currentAmount);
+		slider.addChangeListener(sliderListener);
+		wrapper.add(box);
+		innerPanel.add(currentAmount);
+		panel.add(wrapper);
+		panel.add(slider);
+		panel.add(innerPanel);
 
 		JOptionPane.showOptionDialog(view, panel, "Neue Lieferung", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, options, options[0]);

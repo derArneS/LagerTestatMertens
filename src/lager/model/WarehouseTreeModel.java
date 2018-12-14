@@ -4,6 +4,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
+@SuppressWarnings("serial")
 public class WarehouseTreeModel extends DefaultTreeModel {
 
 	public WarehouseTreeModel(TreeNode root) {

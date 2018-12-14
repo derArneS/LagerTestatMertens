@@ -13,9 +13,9 @@ import lager.model.ObservableStack;
 import lager.model.Warehouse;
 import lager.model.WarehouseNode;
 import lager.model.WarehouseTreeModel;
-import lager.view.Delivery;
-import lager.view.NewLagerWindow;
 import lager.view.View;
+import lager.view.deliveryWindow.NewDeliveryWindow;
+import lager.view.lagerWindow.NewLagerWindow;
 
 public class Controller {
 	private View view;
@@ -34,16 +34,16 @@ public class Controller {
 	}
 
 	private void prestart() {
-		Warehouse deutschland = new Warehouse("Deutschland", 0);
-		Warehouse niedersachsen = new Warehouse("Niedersachsen", 0);
-		Warehouse hannoverMisburg = new Warehouse("Hannover-Misburg", 0);
-		Warehouse nienburg = new Warehouse("Nienburg", 0);
-		Warehouse nrw = new Warehouse("NRW", 0);
-		Warehouse bremen = new Warehouse("Bremen", 0);
-		Warehouse hessen = new Warehouse("Hessen", 0);
-		Warehouse sachsen = new Warehouse("Sachsen", 0);
-		Warehouse brandenburg = new Warehouse("Brandenburg", 0);
-		Warehouse mv = new Warehouse("MV", 0);
+		Warehouse deutschland = new Warehouse("Deutschland", 10);
+		Warehouse niedersachsen = new Warehouse("Niedersachsen", 10);
+		Warehouse hannoverMisburg = new Warehouse("Hannover-Misburg", 10);
+		Warehouse nienburg = new Warehouse("Nienburg", 20);
+		Warehouse nrw = new Warehouse("NRW", 10);
+		Warehouse bremen = new Warehouse("Bremen", 10);
+		Warehouse hessen = new Warehouse("Hessen", 10);
+		Warehouse sachsen = new Warehouse("Sachsen", 10);
+		Warehouse brandenburg = new Warehouse("Brandenburg", 10);
+		Warehouse mv = new Warehouse("MV", 10);
 
 		rootNode.insert(deutschland.getNode());
 		deutschland.getNode().insert(niedersachsen.getNode());
@@ -126,15 +126,10 @@ public class Controller {
 	}
 
 	public void newDelivery(View view) {
-		Delivery delivery = new Delivery(view);
+		NewDeliveryWindow delivery = new NewDeliveryWindow(view);
 		int amount = delivery.amountPane();
 		if (amount > 0) {
-			for (int i = 0; i < 5; i++) {
-				String bookingCheck = delivery.bookingPane();
-				if (bookingCheck.equals("CANCEL")) {
-					break;
-				}
-			}
+			String bookingCheck = delivery.bookingPane(amount);
 		}
 
 	}

@@ -1,4 +1,4 @@
-package lager.view;
+package lager.view.lagerWindow;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
