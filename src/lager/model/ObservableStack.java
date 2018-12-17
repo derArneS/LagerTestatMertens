@@ -27,7 +27,9 @@ public class ObservableStack extends Observable {
 
 	@Override
 	public void addObserver(Observer o) {
-
+		super.addObserver(o);
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 }

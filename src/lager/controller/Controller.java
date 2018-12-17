@@ -8,7 +8,9 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.JTree;
 
+import lager.model.Command;
 import lager.model.DeliveriesTableModel;
+import lager.model.EntryCommand;
 import lager.model.ObservableStack;
 import lager.model.Warehouse;
 import lager.model.WarehouseNode;
@@ -127,11 +129,37 @@ public class Controller {
 
 	public void newDelivery(View view) {
 		NewDeliveryWindow delivery = new NewDeliveryWindow(view);
+		bookingsTableModel.addNewDelivery();
 		int amount = delivery.amountPane();
 		if (amount > 0) {
-			String bookingCheck = delivery.bookingPane(amount);
+			bookingsTableModel.addAmount(amount);
+			String bookingCheck = delivery.bookingPane(amount, this);
+			if (bookingCheck.equals("CANCEL")) {
+				bookingsTableModel.deleteLastDelivery();
+			}
+		} else {
+			bookingsTableModel.deleteLastDelivery();
 		}
 
+	}
+
+	public void addDelieveryEntry(int percentage, int iteration, Warehouse warehouse) {
+		Command command = new EntryCommand(bookingsTableModel, percentage, iteration, warehouse);
+		command.exec();
+		undoStack.push(command);
+		view.updateUI();
+	}
+
+	public Object[] undoDeliveryEntry() {
+		Command command = undoStack.pop();
+		Object array[] = command.undo();
+		redoStack.push(command);
+		view.updateUI();
+		return array;
+	}
+
+	public ObservableStack getUndoStack() {
+		return undoStack;
 	}
 
 }

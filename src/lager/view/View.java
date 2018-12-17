@@ -198,6 +198,7 @@ public class View extends JFrame {
 
 	public void updateUI() {
 		warehouses.updateUI();
+		deliveries.updateUI();
 	}
 
 	private List<Warehouse> allLeafs = new ArrayList<Warehouse>();

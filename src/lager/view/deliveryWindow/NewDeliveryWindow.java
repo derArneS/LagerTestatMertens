@@ -15,6 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import lager.controller.Controller;
+import lager.model.ObservableStack;
+import lager.model.Warehouse;
 import lager.view.View;
 import lager.view.lagerWindow.ObservableKeyListener;
 
@@ -79,7 +82,7 @@ public class NewDeliveryWindow {
 	private String bookingCheck = "DEFAULT";
 	private int iteration = 1;
 
-	public String bookingPane(int amount) {
+	public String bookingPane(int amount, Controller controller) {
 		JPanel panel = new JPanel();
 		JPanel wrapper = new JPanel();
 		JPanel innerPanel = new JPanel();
@@ -91,7 +94,7 @@ public class NewDeliveryWindow {
 		ObserverJSlider slider = new ObserverJSlider(0, 100, 100, amount);
 		ObservableChangeListener sliderListener = new ObservableChangeListener(slider);
 		JButton cancel = new JButton("Abbrechen");
-		ObserverLabel currentAmount = new ObserverLabel("");
+		ObserverLabel currentAmount = new ObserverLabel("Test");
 
 		weiter.addActionListener(new ActionListener() {
 
@@ -102,8 +105,21 @@ public class NewDeliveryWindow {
 					w.dispose();
 					bookingCheck = "WEITER";
 				} else {
+					controller.addDelieveryEntry(slider.getCurrentAmount(), iteration,
+							(Warehouse) box.getSelectedItem());
 					iteration++;
 				}
+			}
+		});
+
+		back.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Object[] array = controller.undoDeliveryEntry();
+				slider.setValue((int) array[0]);
+				box.setSelectedItem(array[1]);
+				iteration--;
 			}
 		});
 
@@ -121,8 +137,9 @@ public class NewDeliveryWindow {
 
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		panel.setPreferredSize(new Dimension(400, 100));
-		wrapper.setPreferredSize(new Dimension(250, 50));
+//		panel.setPreferredSize(new Dimension(400, 100));
+//		wrapper.setPreferredSize(new Dimension(250, 50));
+//		innerPanel.setPreferredSize(new Dimension(100, 50));
 
 		slider.setMajorTickSpacing(10);
 		slider.setMinorTickSpacing(1);
@@ -133,12 +150,16 @@ public class NewDeliveryWindow {
 		boxListener.addObserver(slider);
 		box.addActionListener(boxListener);
 		sliderListener.addObserver(currentAmount);
+
+		ObservableStack undoStack = controller.getUndoStack();
+		undoStack.addObserver(back);
 		slider.addChangeListener(sliderListener);
 		wrapper.add(box);
 		innerPanel.add(currentAmount);
 		panel.add(wrapper);
 		panel.add(slider);
-		panel.add(innerPanel);
+		panel.add(currentAmount);
+		panel.validate();
 
 		JOptionPane.showOptionDialog(view, panel, "Neue Lieferung", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, options, options[0]);

@@ -18,15 +18,15 @@ public class ObservableComboBoxListener extends Observable implements ActionList
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		this.setChanged();
-		this.notifyObservers(box.getSelectedItem());
+		setChanged();
+		notifyObservers(box.getSelectedItem());
 	}
 
 	@Override
 	public void addObserver(Observer o) {
 		super.addObserver(o);
-		super.setChanged();
-		super.notifyObservers(box.getSelectedItem());
+		setChanged();
+		notifyObservers(box.getSelectedItem());
 	}
 
 }

@@ -14,7 +14,7 @@ public class ObserverLabel extends JLabel implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		this.setText("Momentane Buchung: " + arg);
+		setText("Momentane Buchung: " + arg);
 	}
 
 }
