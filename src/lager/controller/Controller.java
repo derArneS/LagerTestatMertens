@@ -22,7 +22,7 @@ import lager.view.lagerWindow.NewLagerWindow;
 public class Controller {
 	private View view;
 	private WarehouseTreeModel warehouseTreeModel;
-	private DeliveriesTableModel bookingsTableModel;
+	private DeliveriesTableModel deliveriesTableModel;
 	private WarehouseNode rootNode = new Warehouse("root", 0).getNode();
 	private ObservableStack undoStack = new ObservableStack();
 	private ObservableStack redoStack = new ObservableStack();
@@ -64,7 +64,7 @@ public class Controller {
 
 	private void rewire(WarehouseTreeModel warehouseTreeModel, DeliveriesTableModel bookingsTableModel) {
 		this.warehouseTreeModel = warehouseTreeModel;
-		this.bookingsTableModel = bookingsTableModel;
+		this.deliveriesTableModel = bookingsTableModel;
 
 		view.setWarehouseModel(warehouseTreeModel);
 		view.setDeliveryModel(bookingsTableModel);
@@ -75,7 +75,7 @@ public class Controller {
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 
 		oos.writeObject(warehouseTreeModel);
-		oos.writeObject(bookingsTableModel);
+		oos.writeObject(deliveriesTableModel);
 		oos.close();
 	}
 
@@ -129,22 +129,28 @@ public class Controller {
 
 	public void newDelivery(View view) {
 		NewDeliveryWindow delivery = new NewDeliveryWindow(view);
-		bookingsTableModel.addNewDelivery();
+		view.updateUI();
+		deliveriesTableModel.addNewDelivery();
 		int amount = delivery.amountPane();
 		if (amount > 0) {
-			bookingsTableModel.addAmount(amount);
+			deliveriesTableModel.addAmount(amount);
+			view.updateUI();
 			String bookingCheck = delivery.bookingPane(amount, this);
-			if (bookingCheck.equals("CANCEL")) {
-				bookingsTableModel.deleteLastDelivery();
+			if (!bookingCheck.equals("WEITER")) {
+				deliveriesTableModel.deleteLastDelivery();
 			}
 		} else {
-			bookingsTableModel.deleteLastDelivery();
+			deliveriesTableModel.deleteLastDelivery();
 		}
+
+		view.updateUI();
+		undoStack.clear();
+		redoStack.clear();
 
 	}
 
 	public void addDelieveryEntry(int percentage, int iteration, Warehouse warehouse) {
-		Command command = new EntryCommand(bookingsTableModel, percentage, iteration, warehouse);
+		Command command = new EntryCommand(deliveriesTableModel, percentage, iteration, warehouse);
 		command.exec();
 		undoStack.push(command);
 		view.updateUI();
@@ -162,4 +168,10 @@ public class Controller {
 		return undoStack;
 	}
 
+	public DeliveriesTableModel getDeliveryModel() {
+		return deliveriesTableModel;
+	}
+
+	public void doBooking() {
+	}
 }

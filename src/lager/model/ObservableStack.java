@@ -32,4 +32,8 @@ public class ObservableStack extends Observable {
 		this.notifyObservers();
 	}
 
+	public void clear() {
+		commandStack.clear();
+	}
+
 }

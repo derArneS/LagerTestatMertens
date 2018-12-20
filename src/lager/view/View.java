@@ -156,7 +156,10 @@ public class View extends JFrame {
 				if (warehouses.getSelectionCount() != 0) {
 					String name = JOptionPane.showInputDialog(View.this, "Neuen Namen fuer das Lager eingeben",
 							"Namen aendern", JOptionPane.QUESTION_MESSAGE);
-					((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse().setName(name);
+					if (name != null) {
+						((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse()
+								.setName(name);
+					}
 				} else {
 					JOptionPane.showMessageDialog(View.this, "Kein Lager ausgewaehlt", "Kein Lager",
 							JOptionPane.INFORMATION_MESSAGE);

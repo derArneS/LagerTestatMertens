@@ -20,8 +20,8 @@ public class ObserverJSlider extends JSlider implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		Warehouse warehouse = (Warehouse) arg1;
 
+		float percent = ((float) (warehouse.getCapacity() - warehouse.getStock())) / ((float) amount) * 100;
 		if (amount > warehouse.getCapacity() - warehouse.getStock()) {
-			float percent = ((float) (warehouse.getCapacity() - warehouse.getStock())) / ((float) amount) * 100;
 			setMaximum((int) percent);
 		} else {
 			setMaximum(100);
@@ -30,6 +30,10 @@ public class ObserverJSlider extends JSlider implements Observer {
 
 	public int getCurrentAmount() {
 		return (int) ((float) getValue() / (float) 100 * amount);
+	}
+
+	public int getCurrentPercentage() {
+		return getCurrentAmount() * 100 / amount;
 	}
 
 }

@@ -28,4 +28,8 @@ public class ObservableChangeListener extends Observable implements ChangeListen
 		super.notifyObservers(slider.getCurrentAmount());
 	}
 
+	public ObserverJSlider getSlider() {
+		return slider;
+	}
+
 }

@@ -20,19 +20,19 @@ public class ObserverButton extends JButton implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		if (o instanceof ObservableKeyListener) {
-			if (((ObservableKeyListener) o).getName().equals("MENGE")) {
-				if (((ObservableKeyListener) o).getTextField().getText().isEmpty()) {
+			ObservableKeyListener l = (ObservableKeyListener) o;
+			if (l.getName().equals("MENGE")) {
+				if (l.getTextField().getText().isEmpty()) {
 					this.setEnabled(false);
 				} else {
-					if (((ObservableKeyListener) o).getTextField().getText().matches("[1-9]\\d*")) {
-						this.setEnabled(true);
-					} else {
-						this.setEnabled(false);
-					}
+					setEnabled(l.getTextField().getText().matches("[1-9]\\d*"));
 				}
 			}
 		} else if (o instanceof ObservableStack) {
 			this.setEnabled(!((ObservableStack) o).isEmpty());
+		} else if (o instanceof ObservableChangeListener) {
+			ObservableChangeListener l = (ObservableChangeListener) o;
+			setEnabled(!(l.getSlider().getCurrentAmount() == 0));
 		}
 	}
 

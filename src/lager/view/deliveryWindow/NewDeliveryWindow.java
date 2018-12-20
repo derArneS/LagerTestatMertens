@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Stack;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -81,6 +82,7 @@ public class NewDeliveryWindow {
 
 	private String bookingCheck = "DEFAULT";
 	private int iteration = 1;
+	private Stack<Integer> amountStack = new Stack<Integer>();
 
 	public String bookingPane(int amount, Controller controller) {
 		JPanel panel = new JPanel();
@@ -94,20 +96,33 @@ public class NewDeliveryWindow {
 		ObserverJSlider slider = new ObserverJSlider(0, 100, 100, amount);
 		ObservableChangeListener sliderListener = new ObservableChangeListener(slider);
 		JButton cancel = new JButton("Abbrechen");
-		ObserverLabel currentAmount = new ObserverLabel("Test");
+		ObserverLabel currentAmount = new ObserverLabel("", amount);
 
 		weiter.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (iteration == 5) {
+					controller.addDelieveryEntry(slider.getCurrentPercentage(), iteration,
+							(Warehouse) box.getSelectedItem());
+					controller.doBooking();
 					Window w = SwingUtilities.getWindowAncestor(weiter);
 					w.dispose();
 					bookingCheck = "WEITER";
-				} else {
-					controller.addDelieveryEntry(slider.getCurrentAmount(), iteration,
+				} else if (iteration < 5) {
+					controller.addDelieveryEntry(slider.getCurrentPercentage(), iteration,
 							(Warehouse) box.getSelectedItem());
-					iteration++;
+					currentAmount.delFromAmount(slider.getCurrentAmount());
+					amountStack.push(slider.getCurrentAmount());
+					if (controller.getDeliveryModel().getPercentage() != 100) {
+						iteration++;
+					} else {
+						iteration = 6;
+						controller.doBooking();
+						Window w = SwingUtilities.getWindowAncestor(weiter);
+						w.dispose();
+						bookingCheck = "WEITER";
+					}
 				}
 			}
 		});
@@ -119,6 +134,7 @@ public class NewDeliveryWindow {
 				Object[] array = controller.undoDeliveryEntry();
 				slider.setValue((int) array[0]);
 				box.setSelectedItem(array[1]);
+				currentAmount.addToAmount(amountStack.pop());
 				iteration--;
 			}
 		});
@@ -137,9 +153,9 @@ public class NewDeliveryWindow {
 
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-//		panel.setPreferredSize(new Dimension(400, 100));
-//		wrapper.setPreferredSize(new Dimension(250, 50));
-//		innerPanel.setPreferredSize(new Dimension(100, 50));
+		panel.setPreferredSize(new Dimension(400, 100));
+		wrapper.setPreferredSize(new Dimension(250, 50));
+		innerPanel.setPreferredSize(new Dimension(100, 50));
 
 		slider.setMajorTickSpacing(10);
 		slider.setMinorTickSpacing(1);
@@ -150,6 +166,7 @@ public class NewDeliveryWindow {
 		boxListener.addObserver(slider);
 		box.addActionListener(boxListener);
 		sliderListener.addObserver(currentAmount);
+		sliderListener.addObserver(weiter);
 
 		ObservableStack undoStack = controller.getUndoStack();
 		undoStack.addObserver(back);
@@ -158,7 +175,7 @@ public class NewDeliveryWindow {
 		innerPanel.add(currentAmount);
 		panel.add(wrapper);
 		panel.add(slider);
-		panel.add(currentAmount);
+		panel.add(innerPanel);
 		panel.validate();
 
 		JOptionPane.showOptionDialog(view, panel, "Neue Lieferung", JOptionPane.OK_CANCEL_OPTION,
