@@ -4,6 +4,9 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Stack;
 
+/**
+ * Anpassung eines Stacks zu einem Observable
+ */
 public class ObservableStack extends Observable {
 	private Stack<Command> commandStack = new Stack<Command>();
 

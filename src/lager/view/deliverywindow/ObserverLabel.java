@@ -5,6 +5,9 @@ import java.util.Observer;
 
 import javax.swing.JLabel;
 
+/**
+ * Erweiterung eines JLabels zu einem ObserverJLabel
+ */
 @SuppressWarnings("serial")
 public class ObserverLabel extends JLabel implements Observer {
 
@@ -18,12 +21,15 @@ public class ObserverLabel extends JLabel implements Observer {
 
 	@Override
 	public void update(Observable o, Object part) {
+		/*
+		 * Aktualisierung des Textes auf den aktuellen Status
+		 */
 		this.part = (int) part;
-		setText("Momentane Buchung: " + part + "   Noch zu verteilende Gï¿½ter: " + amount);
+		setText("Momentane Buchung: " + part + "   Noch zu verteilende Güter: " + amount);
 	}
 
 	public void setAmount(int newAmount) {
 		amount = newAmount;
-		setText("Momentane Buchung: " + part + "   Noch zu verteilende Gï¿½ter: " + amount);
+		setText("Momentane Buchung: " + part + "   Noch zu verteilende Güter: " + amount);
 	}
 }

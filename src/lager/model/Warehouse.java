@@ -2,6 +2,9 @@ package lager.model;
 
 import java.io.Serializable;
 
+/**
+ * Die zantrale Datenstruktur Warehouse
+ */
 @SuppressWarnings("serial")
 public class Warehouse implements Serializable {
 	private String name;
@@ -9,6 +12,13 @@ public class Warehouse implements Serializable {
 	private int stock;
 	private WarehouseNode warehouseNode;
 
+	/**
+	 * Erstellen eines Warenhauses mit Name und Kapazität
+	 * Initialisierung einer WarehouseNode für dieses Warehouse zur Verwendung im JTree
+	 * 
+	 * @param name
+	 * @param capacity
+	 */
 	public Warehouse(String name, int capacity) {
 		this.name = name;
 		this.capacity = capacity;

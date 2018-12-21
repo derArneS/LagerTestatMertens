@@ -22,6 +22,9 @@ import lager.model.Warehouse;
 import lager.view.View;
 import lager.view.lagerwindow.ObservableKeyListener;
 
+/**
+ * Der JOptionPane Dialog um einen neue Buchung zum System hinzuzufügen
+ */
 public class NewDeliveryWindow {
 	View view;
 
@@ -31,6 +34,10 @@ public class NewDeliveryWindow {
 
 	private String amountCheck = "DEFAULT";
 
+	/**
+	 * Öffnet die JOptionPane zur Eingabe des Umfangs der Buchung
+	 * @return Umfang der Buchung
+	 */
 	public int amountPane() {
 		JPanel panel = new JPanel();
 		ObserverButton weiter = new ObserverButton("Weiter");
@@ -85,6 +92,12 @@ public class NewDeliveryWindow {
 	private int amountLeft;
 	private Stack<Integer> amountStack = new Stack<Integer>();
 
+	/**
+	 * Öffnet die JOptionPane zur Eingabe einer Teilbuchung
+	 * @param amount Umfang der Kompletten Buchung
+	 * @param controller
+	 * @return auszuführende Aktion
+	 */
 	public String bookingPane(int amount, Controller controller) {
 		JPanel panel = new JPanel();
 		JPanel wrapper = new JPanel();

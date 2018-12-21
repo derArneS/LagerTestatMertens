@@ -8,6 +8,9 @@ import java.util.Map;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
+/**
+ * Ein Knoten zur Verwendung des Warehouses im JTree zur Verwaltung der Kinder und des Elternknotens
+ */
 @SuppressWarnings("serial")
 public class WarehouseNode implements MutableTreeNode, Serializable {
 	private Warehouse warehouse;

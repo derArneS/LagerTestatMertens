@@ -14,6 +14,9 @@ import javax.swing.SwingUtilities;
 
 import lager.view.View;
 
+/**
+ * Der JOptionPane Dialog um ein neues Lager hinzuzufügen
+ */
 public class NewLagerWindow {
 	private String buttonCheck = "DEFAULT";
 	private View view;
@@ -33,6 +36,10 @@ public class NewLagerWindow {
 		this.view = view;
 	}
 
+	/**
+	 * Anzeigen des Dialogs zum hinzufügen eines Lagers
+	 * @return
+	 */
 	public Boolean optionPane() {
 		weiter.addActionListener(new ActionListener() {
 

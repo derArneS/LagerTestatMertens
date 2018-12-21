@@ -7,6 +7,9 @@ import java.util.Observer;
 
 import javax.swing.JTextField;
 
+/**
+ * Implementierung eines KeyListeners und Erweiterung eines Observables
+ */
 public class ObservableKeyListener extends Observable implements KeyListener {
 	private JTextField field;
 	private String name;

@@ -19,6 +19,9 @@ import lager.view.View;
 import lager.view.deliverywindow.NewDeliveryWindow;
 import lager.view.lagerwindow.NewLagerWindow;
 
+/**
+ * Der Controller des MVC-Patterns
+ */
 public class Controller {
 	private View view;
 	private WarehouseTreeModel warehouseTreeModel;
@@ -27,6 +30,9 @@ public class Controller {
 	private ObservableStack undoStack = new ObservableStack();
 	private ObservableStack redoStack = new ObservableStack();
 
+	/**
+	 * Erzeugen der View und des Models und Verknüpfen der Models
+	 */
 	public Controller() {
 		view = new View(this, "Lagersimulator");
 
@@ -35,6 +41,9 @@ public class Controller {
 		prestart();
 	}
 
+	/**
+	 * Initialisierung der Warehouses und Aufbau der Start-Datenstruktur
+	 */
 	private void prestart() {
 		Warehouse deutschland = new Warehouse("Deutschland", 10);
 		Warehouse niedersachsen = new Warehouse("Niedersachsen", 10);
@@ -62,6 +71,12 @@ public class Controller {
 
 	}
 
+	/**
+	 * Verknüpfen von 2 Models
+	 * 
+	 * @param warehouseTreeModel Warenhäuser
+	 * @param bookingsTableModel Buchungen
+	 */
 	private void rewire(WarehouseTreeModel warehouseTreeModel, DeliveriesTableModel bookingsTableModel) {
 		this.warehouseTreeModel = warehouseTreeModel;
 		this.deliveriesTableModel = bookingsTableModel;
@@ -70,6 +85,12 @@ public class Controller {
 		view.setDeliveryModel(bookingsTableModel);
 	}
 
+	/**
+	 * Speichert die aktuelle Lager- und Buchungsstruktur
+	 * 
+	 * @param file Datei, die gespeichert werden soll
+	 * @throws Exception
+	 */
 	public void save(File file) throws Exception {
 		FileOutputStream fos = new FileOutputStream(file);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -79,6 +100,9 @@ public class Controller {
 		oos.close();
 	}
 
+	/**
+	 * Laden einer Lager- und Buchungsstruktur
+	 */
 	public void load(File selectedFile) throws Exception {
 		FileInputStream fis = new FileInputStream(selectedFile);
 		ObjectInputStream ois = new ObjectInputStream(fis);
@@ -90,6 +114,11 @@ public class Controller {
 		ois.close();
 	}
 
+	/**
+	 * Entfernen einen Warehouses
+	 * 
+	 * @param warehouse
+	 */
 	public void removeWarehouse(Warehouse warehouse) {
 		for (WarehouseNode n : warehouse.getNode().getChildren().values()) {
 			((WarehouseNode) warehouse.getNode().getParent()).insert(n);
@@ -99,6 +128,12 @@ public class Controller {
 
 	}
 
+	/**
+	 * Hinzufügen der Warehouses aus einem JTree
+	 * 
+	 * @param warehouses
+	 * @param view
+	 */
 	public void addWarehouse(JTree warehouses, View view) {
 		NewLagerWindow newLagerWindow = new NewLagerWindow(view);
 		if (newLagerWindow.optionPane()) {
@@ -114,6 +149,13 @@ public class Controller {
 
 	}
 
+	/**
+	 * Hinzufügen eines neuen Warehouses zur Datenstruktur
+	 * 
+	 * @param warehouse
+	 * @param name
+	 * @param capacity
+	 */
 	public void addWarehouse(Warehouse warehouse, String name, int capacity) {
 		Warehouse newWarehouse = new Warehouse(name, capacity);
 
@@ -127,6 +169,11 @@ public class Controller {
 
 	}
 
+	/**
+	 * Auslösen einer neuen Buchung
+	 * 
+	 * @param view
+	 */
 	public void newDelivery(View view) {
 		NewDeliveryWindow delivery = new NewDeliveryWindow(view);
 		view.updateUI();
@@ -151,6 +198,14 @@ public class Controller {
 
 	}
 
+	/**
+	 * Hinzufügen eines neuen Buchungsteileintrags
+	 * 
+	 * @param percentage
+	 * @param iteration
+	 * @param warehouse
+	 * @param amount
+	 */
 	public void addDelieveryEntry(double percentage, int iteration, Warehouse warehouse, int amount) {
 		Command command = new EntryCommand(deliveriesTableModel, percentage, iteration, warehouse, amount);
 		command.exec();
@@ -158,6 +213,11 @@ public class Controller {
 		view.updateUI();
 	}
 
+	/**
+	 * Rückgängigmachen einer Buchung
+	 * 
+	 * @return
+	 */
 	public Object[] undoDeliveryEntry() {
 		Command command = undoStack.pop();
 		Object array[] = command.undo();
@@ -166,14 +226,27 @@ public class Controller {
 		return array;
 	}
 
+	/**
+	 * Rückgbe des Undo-Stacks
+	 * 
+	 * @return Undo-Stack
+	 */
 	public ObservableStack getUndoStack() {
 		return undoStack;
 	}
 
+	/**
+	 * Rückgabe des Delivery-Models
+	 * 
+	 * @return Delivery-Model
+	 */
 	public DeliveriesTableModel getDeliveryModel() {
 		return deliveriesTableModel;
 	}
 
+	/**
+	 * Zurücksetzen des Undo-Stacks
+	 */
 	public void resetUndoStack() {
 		while (!undoStack.isEmpty()) {
 			Command command = undoStack.pop();

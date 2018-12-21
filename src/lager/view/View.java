@@ -23,6 +23,9 @@ import lager.controller.Controller;
 import lager.model.Warehouse;
 import lager.model.WarehouseNode;
 
+/**
+ * View des MVC-Patterns
+ */
 @SuppressWarnings("serial")
 public class View extends JFrame {
 	private Controller controller;
@@ -47,6 +50,9 @@ public class View extends JFrame {
 		viewAufbauen();
 	}
 
+	/**
+	 * Aufbauen und anzeigen der View
+	 */
 	private void viewAufbauen() {
 		controls.setLayout(new BoxLayout(controls, BoxLayout.X_AXIS));
 		visualization.setLayout(new BoxLayout(visualization, BoxLayout.Y_AXIS));
@@ -199,6 +205,9 @@ public class View extends JFrame {
 		deliveries.setModel(model);
 	}
 
+	/**
+	 * Aktualisiert die UI der Models
+	 */
 	public void updateUI() {
 		warehouses.updateUI();
 		deliveries.updateUI();

@@ -6,6 +6,9 @@ import java.util.Observer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * Implementierung eines ChangeListeners und Erweiterung eines Observables
+ */
 public class ObservableChangeListener extends Observable implements ChangeListener {
 	private ObserverJSlider slider;
 

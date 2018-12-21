@@ -1,5 +1,8 @@
 package lager.model;
 
+/**
+ * Command-Implementierung für einen neuen Buchungseintrag
+ */
 public class EntryCommand implements Command {
 	private DeliveriesTableModel model;
 	private int iteration, amount;

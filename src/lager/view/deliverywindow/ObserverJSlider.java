@@ -7,6 +7,9 @@ import javax.swing.JSlider;
 
 import lager.model.Warehouse;
 
+/**
+ * Erweiterung eines JSliders zu einem ObserverJSlider
+ */
 @SuppressWarnings("serial")
 public class ObserverJSlider extends JSlider implements Observer {
 	private int amount;
@@ -22,6 +25,9 @@ public class ObserverJSlider extends JSlider implements Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
+		/*
+		 * Anpassung der Skalierung auf die aktuelle Buchung
+		 */
 		Warehouse warehouse = (Warehouse) arg1;
 
 		int free = warehouse.getCapacity() - warehouse.getStock();

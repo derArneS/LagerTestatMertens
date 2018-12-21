@@ -4,6 +4,9 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
+/**
+ * Das Warehouse Tree-Model, das das DefaultTreeModel des JTrees erweitert
+ */
 @SuppressWarnings("serial")
 public class WarehouseTreeModel extends DefaultTreeModel {
 
