@@ -1,4 +1,4 @@
-package lager.view.lagerWindow;
+package lager.view.lagerwindow;
 
 import java.awt.Dimension;
 import java.awt.Window;

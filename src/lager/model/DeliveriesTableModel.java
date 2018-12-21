@@ -41,15 +41,22 @@ public class DeliveriesTableModel extends AbstractTableModel {
 		data.get(data.size())[1] = amount;
 	}
 
-	public void setEntry(Integer percentage, Warehouse warehouse, int iteration) {
-		data.get(data.size())[2 * iteration] = percentage;
-		data.get(data.size())[2 * iteration + 1] = warehouse;
-
-		int tempPercentage = 0;
-		for (int i = 1; i < 5; i++) {
-			Integer integer = (Integer) data.get(data.size())[2 * i];
-			tempPercentage += integer == null ? 0 : integer;
+	public void setEntry(Double percentage, Warehouse warehouse, int iteration, int amount) {
+		if (percentage != null) {
+			data.get(data.size())[2 * iteration] = ((double) Math.round(percentage * 100)) / 100;
+			data.get(data.size())[2 * iteration + 1] = warehouse.getName();
+		} else {
+			data.get(data.size())[2 * iteration] = null;
+			data.get(data.size())[2 * iteration + 1] = null;
 		}
+
+		double tempPercentage = 0;
+		for (int i = 1; i < 6; i++) {
+			Double two = (Double) data.get(data.size())[2 * i];
+			tempPercentage += two == null ? 0 : two;
+		}
+
+		warehouse.addToStock(amount);
 
 		data.get(data.size())[12] = tempPercentage;
 	}

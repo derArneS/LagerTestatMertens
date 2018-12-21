@@ -1,4 +1,4 @@
-package lager.view.deliveryWindow;
+package lager.view.deliverywindow;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -19,17 +19,11 @@ public class ObserverLabel extends JLabel implements Observer {
 	@Override
 	public void update(Observable o, Object part) {
 		this.part = (int) part;
-		setText("Momentane Buchung: " + part + "   Noch zu verteilende Güter: " + amount);
+		setText("Momentane Buchung: " + part + "   Noch zu verteilende Gï¿½ter: " + amount);
 	}
 
-	public void delFromAmount(int del) {
-		amount -= del;
-		setText("Momentane Buchung: " + part + "   Noch zu verteilende Güter: " + amount);
+	public void setAmount(int newAmount) {
+		amount = newAmount;
+		setText("Momentane Buchung: " + part + "   Noch zu verteilende Gï¿½ter: " + amount);
 	}
-
-	public void addToAmount(int add) {
-		amount += add;
-		setText("Momentane Buchung: " + part + "   Noch zu verteilende Güter: " + amount);
-	}
-
 }

@@ -1,4 +1,4 @@
-package lager.view.deliveryWindow;
+package lager.view.deliverywindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

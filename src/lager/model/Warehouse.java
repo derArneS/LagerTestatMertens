@@ -76,4 +76,8 @@ public class Warehouse implements Serializable {
 		this.name = name;
 	}
 
+	public Object getName() {
+		return name;
+	}
+
 }

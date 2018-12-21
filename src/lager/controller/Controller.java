@@ -16,8 +16,8 @@ import lager.model.Warehouse;
 import lager.model.WarehouseNode;
 import lager.model.WarehouseTreeModel;
 import lager.view.View;
-import lager.view.deliveryWindow.NewDeliveryWindow;
-import lager.view.lagerWindow.NewLagerWindow;
+import lager.view.deliverywindow.NewDeliveryWindow;
+import lager.view.lagerwindow.NewLagerWindow;
 
 public class Controller {
 	private View view;
@@ -137,9 +137,11 @@ public class Controller {
 			view.updateUI();
 			String bookingCheck = delivery.bookingPane(amount, this);
 			if (!bookingCheck.equals("WEITER")) {
+				resetUndoStack();
 				deliveriesTableModel.deleteLastDelivery();
 			}
 		} else {
+			resetUndoStack();
 			deliveriesTableModel.deleteLastDelivery();
 		}
 
@@ -149,8 +151,8 @@ public class Controller {
 
 	}
 
-	public void addDelieveryEntry(int percentage, int iteration, Warehouse warehouse) {
-		Command command = new EntryCommand(deliveriesTableModel, percentage, iteration, warehouse);
+	public void addDelieveryEntry(double percentage, int iteration, Warehouse warehouse, int amount) {
+		Command command = new EntryCommand(deliveriesTableModel, percentage, iteration, warehouse, amount);
 		command.exec();
 		undoStack.push(command);
 		view.updateUI();
@@ -172,6 +174,11 @@ public class Controller {
 		return deliveriesTableModel;
 	}
 
-	public void doBooking() {
+	public void resetUndoStack() {
+		while (!undoStack.isEmpty()) {
+			Command command = undoStack.pop();
+			command.undo();
+		}
 	}
+
 }

@@ -1,4 +1,4 @@
-package lager.view.deliveryWindow;
+package lager.view.deliverywindow;
 
 import java.util.Observable;
 import java.util.Observer;

@@ -1,4 +1,4 @@
-package lager.view.deliveryWindow;
+package lager.view.deliverywindow;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -20,7 +20,7 @@ import lager.controller.Controller;
 import lager.model.ObservableStack;
 import lager.model.Warehouse;
 import lager.view.View;
-import lager.view.lagerWindow.ObservableKeyListener;
+import lager.view.lagerwindow.ObservableKeyListener;
 
 public class NewDeliveryWindow {
 	View view;
@@ -82,6 +82,7 @@ public class NewDeliveryWindow {
 
 	private String bookingCheck = "DEFAULT";
 	private int iteration = 1;
+	private int amountLeft;
 	private Stack<Integer> amountStack = new Stack<Integer>();
 
 	public String bookingPane(int amount, Controller controller) {
@@ -98,31 +99,30 @@ public class NewDeliveryWindow {
 		JButton cancel = new JButton("Abbrechen");
 		ObserverLabel currentAmount = new ObserverLabel("", amount);
 
+		amountLeft = amount;
+		slider.setIteration(iteration);
+
 		weiter.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (iteration == 5) {
-					controller.addDelieveryEntry(slider.getCurrentPercentage(), iteration,
-							(Warehouse) box.getSelectedItem());
-					controller.doBooking();
+				controller.addDelieveryEntry(slider.getCurrentPercentage(), iteration,
+						(Warehouse) box.getSelectedItem(), slider.getCurrentAmount());
+
+				amountStack.push(slider.getCurrentAmount());
+				amountLeft -= slider.getCurrentAmount();
+				currentAmount.setAmount(amountLeft);
+				slider.setAmountLeft(amountLeft);
+				box.updateUI();
+				box.setSelectedIndex(0);
+
+				iteration++;
+				slider.setIteration(iteration);
+
+				if (iteration == 6 || amountLeft == 0) {
 					Window w = SwingUtilities.getWindowAncestor(weiter);
 					w.dispose();
 					bookingCheck = "WEITER";
-				} else if (iteration < 5) {
-					controller.addDelieveryEntry(slider.getCurrentPercentage(), iteration,
-							(Warehouse) box.getSelectedItem());
-					currentAmount.delFromAmount(slider.getCurrentAmount());
-					amountStack.push(slider.getCurrentAmount());
-					if (controller.getDeliveryModel().getPercentage() != 100) {
-						iteration++;
-					} else {
-						iteration = 6;
-						controller.doBooking();
-						Window w = SwingUtilities.getWindowAncestor(weiter);
-						w.dispose();
-						bookingCheck = "WEITER";
-					}
 				}
 			}
 		});
@@ -134,8 +134,12 @@ public class NewDeliveryWindow {
 				Object[] array = controller.undoDeliveryEntry();
 				slider.setValue((int) array[0]);
 				box.setSelectedItem(array[1]);
-				currentAmount.addToAmount(amountStack.pop());
+				amountLeft += amountStack.pop();
+				currentAmount.setAmount(amountLeft);
+				slider.setAmountLeft(amountLeft);
+				box.updateUI();
 				iteration--;
+				slider.setIteration(iteration);
 			}
 		});
 
@@ -153,9 +157,9 @@ public class NewDeliveryWindow {
 
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		panel.setPreferredSize(new Dimension(400, 100));
-		wrapper.setPreferredSize(new Dimension(250, 50));
-		innerPanel.setPreferredSize(new Dimension(100, 50));
+//		panel.setPreferredSize(new Dimension(400, 100));
+//		wrapper.setPreferredSize(new Dimension(250, 50));
+//		innerPanel.setPreferredSize(new Dimension(100, 50));
 
 		slider.setMajorTickSpacing(10);
 		slider.setMinorTickSpacing(1);

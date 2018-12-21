@@ -1,4 +1,4 @@
-package lager.view.deliveryWindow;
+package lager.view.deliverywindow;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -6,7 +6,7 @@ import java.util.Observer;
 import javax.swing.JButton;
 
 import lager.model.ObservableStack;
-import lager.view.lagerWindow.ObservableKeyListener;
+import lager.view.lagerwindow.ObservableKeyListener;
 
 @SuppressWarnings("serial")
 public class ObserverButton extends JButton implements Observer {
@@ -32,7 +32,13 @@ public class ObserverButton extends JButton implements Observer {
 			this.setEnabled(!((ObservableStack) o).isEmpty());
 		} else if (o instanceof ObservableChangeListener) {
 			ObservableChangeListener l = (ObservableChangeListener) o;
-			setEnabled(!(l.getSlider().getCurrentAmount() == 0));
+			ObserverJSlider slider = l.getSlider();
+			if (slider.getIteration() == 5 && slider.getAmountLeft() - slider.getValue() != 0) {
+				setEnabled(false);
+			} else {
+				setEnabled(slider.getCurrentAmount() != 0);
+			}
+
 		}
 	}
 
