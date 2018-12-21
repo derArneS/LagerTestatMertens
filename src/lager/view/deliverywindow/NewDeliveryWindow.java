@@ -146,7 +146,7 @@ public class NewDeliveryWindow {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Object[] array = controller.undoDeliveryEntry();
-				slider.setValue((int) array[0]);
+				slider.setValue((int) (double) array[0]);
 				box.setSelectedItem(array[1]);
 				amountLeft += amountStack.pop();
 				currentAmount.setAmount(amountLeft);
