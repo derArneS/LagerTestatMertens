@@ -102,10 +102,9 @@ public class NewDeliveryWindow {
 		JPanel panel = new JPanel();
 		JPanel wrapper = new JPanel();
 		JPanel innerPanel = new JPanel();
-		JComboBox<Object> box = new JComboBox<Object>(view.getAllLeafs());
+		JComboBox<Object> box = new JComboBox<Object>(view.getAllFreeSpaceLeafs());
 		ObserverButton weiter = new ObserverButton("Weiter");
 		ObserverButton back = new ObserverButton("Zurueck");
-		box.setSelectedIndex(0);
 		ObservableComboBoxListener boxListener = new ObservableComboBoxListener(box);
 		ObserverJSlider slider = new ObserverJSlider(0, 100, 100, amount);
 		ObservableChangeListener sliderListener = new ObservableChangeListener(slider);
@@ -114,11 +113,13 @@ public class NewDeliveryWindow {
 
 		amountLeft = amount;
 		slider.setIteration(iteration);
+		box.setSelectedIndex(0);
 
 		weiter.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				controller.addDelieveryEntry(slider.getCurrentPercentage(), iteration,
 						(Warehouse) box.getSelectedItem(), slider.getCurrentAmount());
 
