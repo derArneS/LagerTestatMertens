@@ -18,6 +18,7 @@ import lager.model.WarehouseTreeModel;
 import lager.view.View;
 import lager.view.deliverywindow.NewDeliveryWindow;
 import lager.view.lagerwindow.NewLagerWindow;
+import lager.view.outputwindow.newOutputWindow;
 
 public class Controller {
 	private View view;
@@ -127,7 +128,7 @@ public class Controller {
 
 	}
 
-	public void newDelivery(View view) {
+	public void newDelivery() {
 		NewDeliveryWindow delivery = new NewDeliveryWindow(view);
 		view.updateUI();
 		deliveriesTableModel.addNewDelivery();
@@ -179,6 +180,18 @@ public class Controller {
 			Command command = undoStack.pop();
 			command.undo();
 		}
+	}
+
+	public void newOutput() {
+		newOutputWindow w = new newOutputWindow(view);
+		w.outoutPane(this);
+	}
+
+	public void newOutput(Object selectedItem, int parseInt) {
+		Warehouse w = (Warehouse) selectedItem;
+		w.addToStock(-parseInt);
+		deliveriesTableModel.addToOutputData(w, parseInt);
+		view.updateUI();
 	}
 
 }

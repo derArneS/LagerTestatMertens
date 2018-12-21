@@ -31,6 +31,7 @@ public class View extends JFrame {
 	private JButton newWarehouse = new JButton("Neues Lager");
 	private JButton delWarehouse = new JButton("Lager loeschen");
 	private JButton newDelivery = new JButton("Neue Lieferung");
+	private JButton newOutput = new JButton("Neue Auslieferung");
 	private JButton clearSelectionWarehouse = new JButton("Auswahl loeschen");
 	private JButton changeName = new JButton("Name aendern");
 	private JButton stock = new JButton("Bestand anzeigen");
@@ -56,6 +57,7 @@ public class View extends JFrame {
 		controls.add(newWarehouse);
 		controls.add(delWarehouse);
 		controls.add(newDelivery);
+		controls.add(newOutput);
 		controls.add(changeName);
 		controls.add(stock);
 
@@ -122,9 +124,14 @@ public class View extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (warehouses.getSelectionCount() != 0) {
-					controller.removeWarehouse(
-							((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse());
-					warehouses.updateUI();
+					if (((WarehouseNode) warehouses.getLastSelectedPathComponent()).getWarehouse().getStock() == 0) {
+						controller.removeWarehouse(
+								((WarehouseNode) warehouses.getSelectionPath().getLastPathComponent()).getWarehouse());
+						warehouses.updateUI();
+					} else {
+						JOptionPane.showMessageDialog(View.this, "Lager muss zum entfernen leer sein",
+								"Lager mit Inhalt", JOptionPane.INFORMATION_MESSAGE);
+					}
 				} else {
 					JOptionPane.showMessageDialog(View.this, "Kein Lager ausgewaehlt", "Kein Lager",
 							JOptionPane.INFORMATION_MESSAGE);
@@ -136,9 +143,19 @@ public class View extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.newDelivery(View.this);
+				controller.newDelivery();
+				newOutput.setEnabled(checkForStock());
 			}
 
+		});
+
+		newOutput.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				controller.newOutput();
+				newOutput.setEnabled(checkForStock());
+			}
 		});
 
 		clearSelectionWarehouse.addActionListener(new ActionListener() {
@@ -193,6 +210,7 @@ public class View extends JFrame {
 
 	public void setWarehouseModel(TreeModel model) {
 		warehouses.setModel(model);
+		newOutput.setEnabled(checkForStock());
 	}
 
 	public void setDeliveryModel(TableModel model) {
@@ -204,23 +222,52 @@ public class View extends JFrame {
 		deliveries.updateUI();
 	}
 
-	private List<Warehouse> allLeafs = new ArrayList<Warehouse>();
-
-	public Object[] getAllLeafs() {
-		getLeafs(((WarehouseNode) warehouses.getModel().getRoot()).getWarehouse());
-		return allLeafs.toArray();
+	public Object[] getAllFreeSpaceLeafs() {
+		List<Warehouse> l = new ArrayList<Warehouse>();
+		Warehouse w = ((WarehouseNode) warehouses.getModel().getRoot()).getWarehouse();
+		getFreeSpaceLeafs(w, l);
+		return l.toArray();
 	}
 
-	private void getLeafs(Warehouse warehouse) {
+	private void getFreeSpaceLeafs(Warehouse warehouse, List<Warehouse> allFreeSpaceLeafs) {
 		WarehouseNode node = warehouse.getNode();
 
 		if (node.isLeaf()) {
-			allLeafs.add(warehouse);
+			if (warehouse.getStock() - warehouse.getCapacity() != 0) {
+				allFreeSpaceLeafs.add(warehouse);
+			}
 		} else {
 			for (WarehouseNode w : node.getChildren().values()) {
-				getLeafs(w.getWarehouse());
+				getFreeSpaceLeafs(w.getWarehouse(), allFreeSpaceLeafs);
 			}
 		}
+	}
 
+	public Object[] getAllLeafsWithStock() {
+		List<Warehouse> l = new ArrayList<Warehouse>();
+		Warehouse w = ((WarehouseNode) warehouses.getModel().getRoot()).getWarehouse();
+		getLeafsWithStock(w, l);
+		return l.toArray();
+	}
+
+	private void getLeafsWithStock(Warehouse w, List<Warehouse> l) {
+		WarehouseNode n = w.getNode();
+		if (n.isLeaf()) {
+			if (w.getStock() != 0) {
+				l.add(w);
+			}
+		} else {
+			for (WarehouseNode child : n.getChildren().values()) {
+				getLeafsWithStock(child.getWarehouse(), l);
+			}
+		}
+	}
+
+	private boolean checkForStock() {
+		Object[] o = getAllLeafsWithStock();
+		if (o.length == 0) {
+			return false;
+		}
+		return true;
 	}
 }
