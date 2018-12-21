@@ -17,6 +17,9 @@ import javax.swing.SwingUtilities;
 import lager.controller.Controller;
 import lager.view.View;
 
+/**
+ * Der JOptionPane Dialog um einen neue Auslieferung zum System hinzuzufügen
+ */
 public class NewOutputWindow {
 	private View view;
 
@@ -24,6 +27,9 @@ public class NewOutputWindow {
 		this.view = view;
 	}
 
+	/**
+	 * Öffnet die JOptionPane zur Eingabe des Umfangs der Auslieferung
+	 */
 	public void outputPane(Controller controller) {
 		JButton finished = new JButton("Fertig");
 		JPanel panel = new JPanel();

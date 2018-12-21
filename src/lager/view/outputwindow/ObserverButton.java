@@ -9,6 +9,9 @@ import javax.swing.JTextField;
 
 import lager.model.Warehouse;
 
+/**
+ * Erweiterung eines JButtons zu einem ObserverButtons
+ */
 public class ObserverButton extends JButton implements Observer {
 
 	private JTextField input;
@@ -26,9 +29,15 @@ public class ObserverButton extends JButton implements Observer {
 		Integer i = null;
 
 		if (input.getText().matches("[1-9]\\d*")) {
+			// Wenn eine valide Zahl eingegeben wird, wird diese als Auslieferungsumfang
+			// gesetzt
 			i = Integer.valueOf(input.getText());
 		}
 
+		/* 
+		 * Eine Auslieferung kann nur gebucht werden, wenn ein Umfang angegeben wurde
+		 * und dieser im Lager vorhanden ist
+		 */
 		if (i == null) {
 			setEnabled(false);
 		} else if (w.getStock() < i) {

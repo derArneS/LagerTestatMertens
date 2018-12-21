@@ -5,6 +5,9 @@ import java.awt.event.KeyListener;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Implementierung eines KeyListeners und Erweiterung eines Observables
+ */
 public class ObservableKeyListener extends Observable implements KeyListener {
 	public ObservableKeyListener() {
 		super();
