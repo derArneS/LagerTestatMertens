@@ -18,7 +18,7 @@ import lager.model.WarehouseTreeModel;
 import lager.view.View;
 import lager.view.deliverywindow.NewDeliveryWindow;
 import lager.view.lagerwindow.NewLagerWindow;
-import lager.view.outputwindow.newOutputWindow;
+import lager.view.outputwindow.NewOutputWindow;
 
 /**
  * Der Controller des MVC-Patterns
@@ -256,8 +256,8 @@ public class Controller {
 	}
 
 	public void newOutput() {
-		newOutputWindow w = new newOutputWindow(view);
-		w.outoutPane(this);
+		NewOutputWindow w = new NewOutputWindow(view);
+		w.outputPane(this);
 	}
 
 	public void newOutput(Object selectedItem, int parseInt) {

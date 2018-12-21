@@ -17,14 +17,14 @@ import javax.swing.SwingUtilities;
 import lager.controller.Controller;
 import lager.view.View;
 
-public class newOutputWindow {
+public class NewOutputWindow {
 	private View view;
 
-	public newOutputWindow(View view) {
+	public NewOutputWindow(View view) {
 		this.view = view;
 	}
 
-	public void outoutPane(Controller controller) {
+	public void outputPane(Controller controller) {
 		JButton finished = new JButton("Fertig");
 		JPanel panel = new JPanel();
 		JPanel innerPanel = new JPanel();
