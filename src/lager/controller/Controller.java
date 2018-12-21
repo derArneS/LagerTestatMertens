@@ -27,7 +27,7 @@ public class Controller {
 	private View view;
 	private WarehouseTreeModel warehouseTreeModel;
 	private DeliveriesTableModel deliveriesTableModel;
-	private WarehouseNode rootNode = new Warehouse("root", 0).getNode();
+	private Warehouse root = new Warehouse("root", 0);
 	private ObservableStack undoStack = new ObservableStack();
 	private ObservableStack redoStack = new ObservableStack();
 
@@ -37,7 +37,7 @@ public class Controller {
 	public Controller() {
 		view = new View(this, "Lagersimulator");
 
-		warehouseTreeModel = new WarehouseTreeModel(rootNode);
+		warehouseTreeModel = new WarehouseTreeModel(root.getNode());
 		rewire(warehouseTreeModel, new DeliveriesTableModel());
 		prestart();
 	}
@@ -47,9 +47,11 @@ public class Controller {
 	 */
 	private void prestart() {
 		Warehouse deutschland = new Warehouse("Deutschland", 10);
+
 		Warehouse niedersachsen = new Warehouse("Niedersachsen", 10);
 		Warehouse hannoverMisburg = new Warehouse("Hannover-Misburg", 10);
 		Warehouse nienburg = new Warehouse("Nienburg", 20);
+
 		Warehouse nrw = new Warehouse("NRW", 10);
 		Warehouse bremen = new Warehouse("Bremen", 10);
 		Warehouse hessen = new Warehouse("Hessen", 10);
@@ -57,7 +59,22 @@ public class Controller {
 		Warehouse brandenburg = new Warehouse("Brandenburg", 10);
 		Warehouse mv = new Warehouse("MV", 10);
 
-		rootNode.insert(deutschland.getNode());
+		Warehouse europa = new Warehouse("Europa", 10);
+		Warehouse frankreich = new Warehouse("Frankreich", 10);
+		Warehouse parisnord = new Warehouse("Paris-Nord", 10);
+		Warehouse orleans = new Warehouse("Orléans", 20);
+		Warehouse marseille = new Warehouse("Marseille", 10);
+		Warehouse nimes = new Warehouse("Nîmes", 10);
+
+		Warehouse italien = new Warehouse("Italien", 10);
+		Warehouse mailand = new Warehouse("Mailand", 10);
+		Warehouse laquila = new Warehouse("L'Aquila", 10);
+
+		Warehouse spanien = new Warehouse("Spanien", 10);
+
+		Warehouse grossbritannien = new Warehouse("Großbrittanien", 10);
+
+		root.getNode().insert(deutschland.getNode());
 		deutschland.getNode().insert(niedersachsen.getNode());
 		niedersachsen.getNode().insert(hannoverMisburg.getNode());
 		niedersachsen.getNode().insert(nienburg.getNode());
@@ -67,6 +84,21 @@ public class Controller {
 		deutschland.getNode().insert(sachsen.getNode());
 		deutschland.getNode().insert(brandenburg.getNode());
 		deutschland.getNode().insert(mv.getNode());
+
+		root.getNode().insert(europa.getNode());
+		europa.getNode().insert(frankreich.getNode());
+		frankreich.getNode().insert(parisnord.getNode());
+		frankreich.getNode().insert(orleans.getNode());
+		frankreich.getNode().insert(marseille.getNode());
+		frankreich.getNode().insert(nimes.getNode());
+
+		europa.getNode().insert(italien.getNode());
+		italien.getNode().insert(mailand.getNode());
+		italien.getNode().insert(laquila.getNode());
+
+		europa.getNode().insert(spanien.getNode());
+
+		root.getNode().insert(grossbritannien.getNode());
 
 		warehouseTreeModel.reload();
 
@@ -255,16 +287,99 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Auslösen einer neuen Auslieferung.
+	 * 
+	 * @param view
+	 * @param controller
+	 */
 	public void newOutput() {
 		NewOutputWindow w = new NewOutputWindow(view);
 		w.outputPane(this);
 	}
 
-	public void newOutput(Object selectedItem, int parseInt) {
-		Warehouse w = (Warehouse) selectedItem;
-		w.addToStock(-parseInt);
-		deliveriesTableModel.addToOutputData(w, parseInt);
+	/**
+	 * Entfernt die gewünschte Menge aus dem Bestand des mitgegeben Lagers.
+	 * 
+	 * @param warehouse
+	 * @param amount
+	 */
+	public void newOutput(Object warehouse, int amount) {
+		Warehouse w = (Warehouse) warehouse;
+		w.addToStock(-amount);
+		deliveriesTableModel.addToOutputData(w, amount);
 		view.updateUI();
 	}
 
+	/**
+	 * Gibt für das mitgegebene Lager alle Zulieferungen zurück
+	 * 
+	 * @param warehouse
+	 * @return
+	 */
+	public Object[][] getInputDataForWarehouse(Warehouse warehouse) {
+		Object[][] data = deliveriesTableModel.getInputData();
+
+		if (data.length > 0) {
+			Object[][] temp = new Object[0][data[0].length];
+			for (int i = 0; i < data.length; i++) {
+				for (int j = 0; j < data[i].length; j++) {
+					if (data[i][j].equals(warehouse.getName())) {
+
+						Object[][] temp2 = new Object[temp.length + 1][data[0].length];
+						for (int k = 0; k < temp.length; k++) {
+							for (int k2 = 0; k2 < temp[0].length; k2++) {
+								temp2[k][k2] = temp[k][k2];
+							}
+						}
+
+						for (int j2 = 0; j2 < data[i].length; j2++) {
+							temp2[i][j2] = data[i][j2];
+						}
+
+						temp = temp2;
+						j = data[i].length;
+					}
+				}
+			}
+			return temp;
+		}
+		return null;
+	}
+
+	/**
+	 * Gibt für das mitgegebene Lager alle Auslieferungen zurück
+	 * 
+	 * @param w
+	 * @return
+	 */
+	public Object[][] getOutputDataForWarehouse(Warehouse w) {
+		Object[][] data = deliveriesTableModel.getOutputData();
+
+		if (data.length > 0) {
+			Object[][] temp = new Object[0][data[0].length];
+			for (int i = 0; i < data.length; i++) {
+				for (int j = 0; j < data[i].length; j++) {
+					if (data[i][j].equals(w)) {
+
+						Object[][] temp2 = new Object[temp.length + 1][data[0].length];
+						for (int k = 0; k < temp.length; k++) {
+							for (int k2 = 0; k2 < temp[0].length; k2++) {
+								temp2[k][k2] = temp[k][k2];
+							}
+						}
+
+						for (int j2 = 0; j2 < data[i].length; j2++) {
+							temp2[i][j2] = data[i][j2];
+						}
+
+						temp = temp2;
+						j = data[i].length;
+					}
+				}
+			}
+			return temp;
+		}
+		return null;
+	}
 }

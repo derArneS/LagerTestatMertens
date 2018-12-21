@@ -13,8 +13,8 @@ public class Warehouse implements Serializable {
 	private WarehouseNode warehouseNode;
 
 	/**
-	 * Erstellen eines Warenhauses mit Name und Kapazität
-	 * Initialisierung einer WarehouseNode für dieses Warehouse zur Verwendung im JTree
+	 * Erstellen eines Warenhauses mit Name und Kapazität Initialisierung einer
+	 * WarehouseNode für dieses Warehouse zur Verwendung im JTree
 	 * 
 	 * @param name
 	 * @param capacity
@@ -51,6 +51,11 @@ public class Warehouse implements Serializable {
 		return stock;
 	}
 
+	/**
+	 * Addiert alle Bestände aller Blätter unter diesem Lager
+	 * 
+	 * @return
+	 */
 	public int getChildStock() {
 		WarehouseNode node = getNode();
 		int tempStock = 0;

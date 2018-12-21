@@ -87,14 +87,52 @@ public class DeliveriesTableModel extends AbstractTableModel {
 
 	/**
 	 * Entfernen der letzten Buchung
-	*/
+	 */
 	public void deleteLastDelivery() {
 		inputData.remove(inputData.size());
 	}
 
-	public void addToOutputData(Warehouse w, int i) {
-		Object[] o = { w, i, new Date() };
+	/**
+	 * Erstellt eine neue Auslieferung mit dem Lager, dem Betrag und der Zeit
+	 * 
+	 * @param warehouse
+	 * @param amount
+	 */
+	public void addToOutputData(Warehouse warehouse, int amount) {
+		Object[] o = { warehouse, amount, new Date() };
 		outputData.put(outputData.size() + 1, o);
+	}
+
+	/**
+	 * Gibt alle Zulieferungen zurück
+	 * 
+	 * @return
+	 */
+	public Object[][] getInputData() {
+		Object[][] o = new Object[inputData.keySet().size()][14];
+
+		for (Integer i : inputData.keySet()) {
+			for (int j = 0; j < 14; j++) {
+				o[i - 1][j] = inputData.get(i)[j];
+			}
+		}
+		return o;
+	}
+
+	/**
+	 * Gibt alle Auslieferungen zurück
+	 * 
+	 * @return
+	 */
+	public Object[][] getOutputData() {
+		Object[][] o = new Object[outputData.keySet().size()][3];
+
+		for (Integer i : outputData.keySet()) {
+			for (int j = 0; j < 3; j++) {
+				o[i - 1][j] = outputData.get(i)[j];
+			}
+		}
+		return o;
 	}
 
 }

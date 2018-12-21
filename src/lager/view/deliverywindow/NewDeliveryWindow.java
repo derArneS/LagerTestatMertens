@@ -36,11 +36,12 @@ public class NewDeliveryWindow {
 
 	/**
 	 * Öffnet die JOptionPane zur Eingabe des Umfangs der Buchung
+	 * 
 	 * @return Umfang der Buchung
 	 */
 	public int amountPane() {
 		JPanel panel = new JPanel();
-		ObserverButton weiter = new ObserverButton("Weiter");
+		ObserverButton go = new ObserverButton("Weiter");
 		JButton back = new JButton("Zurueck");
 		back.setEnabled(false);
 		JButton cancel = new JButton("Abbrechen");
@@ -48,11 +49,11 @@ public class NewDeliveryWindow {
 		JTextField userInput = new JTextField("");
 		ObservableKeyListener oKLUserInput = new ObservableKeyListener(userInput, "MENGE");
 
-		weiter.addActionListener(new ActionListener() {
+		go.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Window w = SwingUtilities.getWindowAncestor(weiter);
+				Window w = SwingUtilities.getWindowAncestor(go);
 				w.dispose();
 				amountCheck = "WEITER";
 			}
@@ -62,14 +63,14 @@ public class NewDeliveryWindow {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Window w = SwingUtilities.getWindowAncestor(weiter);
+				Window w = SwingUtilities.getWindowAncestor(go);
 				w.dispose();
 			}
 		});
 
-		Object[] options = { weiter, back, cancel };
+		Object[] options = { go, back, cancel };
 
-		oKLUserInput.addObserver(weiter);
+		oKLUserInput.addObserver(go);
 		userInput.addKeyListener(oKLUserInput);
 
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -94,7 +95,8 @@ public class NewDeliveryWindow {
 
 	/**
 	 * Öffnet die JOptionPane zur Eingabe einer Teilbuchung
-	 * @param amount Umfang der Kompletten Buchung
+	 * 
+	 * @param amount     Umfang der Kompletten Buchung
 	 * @param controller
 	 * @return auszuführende Aktion
 	 */
@@ -103,7 +105,7 @@ public class NewDeliveryWindow {
 		JPanel wrapper = new JPanel();
 		JPanel innerPanel = new JPanel();
 		JComboBox<Object> box = new JComboBox<Object>(view.getAllFreeSpaceLeafs());
-		ObserverButton weiter = new ObserverButton("Weiter");
+		ObserverButton go = new ObserverButton("Weiter");
 		ObserverButton back = new ObserverButton("Zurueck");
 		ObservableComboBoxListener boxListener = new ObservableComboBoxListener(box);
 		ObserverJSlider slider = new ObserverJSlider(0, 100, 100, amount);
@@ -115,7 +117,7 @@ public class NewDeliveryWindow {
 		slider.setIteration(iteration);
 		box.setSelectedIndex(0);
 
-		weiter.addActionListener(new ActionListener() {
+		go.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -134,7 +136,7 @@ public class NewDeliveryWindow {
 				slider.setIteration(iteration);
 
 				if (iteration == 6 || amountLeft == 0) {
-					Window w = SwingUtilities.getWindowAncestor(weiter);
+					Window w = SwingUtilities.getWindowAncestor(go);
 					w.dispose();
 					bookingCheck = "WEITER";
 				}
@@ -161,19 +163,15 @@ public class NewDeliveryWindow {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Window w = SwingUtilities.getWindowAncestor(weiter);
+				Window w = SwingUtilities.getWindowAncestor(go);
 				w.dispose();
 				bookingCheck = "CANCEL";
 			}
 		});
 
-		Object[] options = { weiter, back, cancel };
+		Object[] options = { go, back, cancel };
 
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-//		panel.setPreferredSize(new Dimension(400, 100));
-//		wrapper.setPreferredSize(new Dimension(250, 50));
-//		innerPanel.setPreferredSize(new Dimension(100, 50));
 
 		slider.setMajorTickSpacing(10);
 		slider.setMinorTickSpacing(1);
@@ -184,7 +182,7 @@ public class NewDeliveryWindow {
 		boxListener.addObserver(slider);
 		box.addActionListener(boxListener);
 		sliderListener.addObserver(currentAmount);
-		sliderListener.addObserver(weiter);
+		sliderListener.addObserver(go);
 
 		ObservableStack undoStack = controller.getUndoStack();
 		undoStack.addObserver(back);

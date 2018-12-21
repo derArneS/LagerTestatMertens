@@ -21,14 +21,14 @@ public class NewLagerWindow {
 	private String buttonCheck = "DEFAULT";
 	private View view;
 	private JPanel panel = new JPanel();
-	private ObserverButton weiter = new ObserverButton("Weiter");
-	private ObserverButton back = new ObserverButton("Zurueck");
+	private ObserverButton go = new ObserverButton("Weiter");
+	private ObserverButton back = new ObserverButton("Zurück");
 	private JPanel panelName = new JPanel();
 	private JLabel labelName = new JLabel("Name: ");
 	private JTextField textFieldName = new JTextField(10);
 	private ObservableKeyListener oKLName = new ObservableKeyListener(textFieldName, "NAME");
 	private JPanel panelCapacity = new JPanel();
-	private JLabel labelCapacity = new JLabel("Kapazitaet: ");
+	private JLabel labelCapacity = new JLabel("Kapazität: ");
 	private JTextField textFieldCapacity = new JTextField(10);
 	private ObservableKeyListener oKLCapacity = new ObservableKeyListener(textFieldCapacity, "CAPACITY");
 
@@ -38,14 +38,15 @@ public class NewLagerWindow {
 
 	/**
 	 * Anzeigen des Dialogs zum hinzufügen eines Lagers
+	 * 
 	 * @return
 	 */
 	public Boolean optionPane() {
-		weiter.addActionListener(new ActionListener() {
+		go.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Window w = SwingUtilities.getWindowAncestor(weiter);
+				Window w = SwingUtilities.getWindowAncestor(go);
 				w.dispose();
 				buttonCheck = "WEITER";
 			}
@@ -60,7 +61,7 @@ public class NewLagerWindow {
 			}
 		});
 
-		ObserverButton[] options = { weiter, back };
+		ObserverButton[] options = { go, back };
 
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
