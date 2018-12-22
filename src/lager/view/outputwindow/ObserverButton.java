@@ -12,12 +12,13 @@ import lager.model.Warehouse;
 /**
  * Erweiterung eines JButtons zu einem ObserverButtons
  */
+@SuppressWarnings("serial")
 public class ObserverButton extends JButton implements Observer {
 
 	private JTextField input;
-	private JComboBox box;
+	private JComboBox<Object> box;
 
-	public ObserverButton(String title, JTextField input, JComboBox box) {
+	public ObserverButton(String title, JTextField input, JComboBox<Object> box) {
 		super(title);
 		this.input = input;
 		this.box = box;
@@ -34,7 +35,7 @@ public class ObserverButton extends JButton implements Observer {
 			i = Integer.valueOf(input.getText());
 		}
 
-		/* 
+		/*
 		 * Eine Auslieferung kann nur gebucht werden, wenn ein Umfang angegeben wurde
 		 * und dieser im Lager vorhanden ist
 		 */

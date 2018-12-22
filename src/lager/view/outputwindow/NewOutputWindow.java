@@ -37,7 +37,7 @@ public class NewOutputWindow {
 		JComboBox<Object> box = new JComboBox<Object>(view.getAllLeafsWithStock());
 		JLabel label = new JLabel("Auslieferungsmenge");
 		JTextField input = new JTextField();
-		ObservableComboBoxListener boxListener = new ObservableComboBoxListener(box);
+		ObservableComboBoxListener boxListener = new ObservableComboBoxListener();
 		ObservableKeyListener keyListener = new ObservableKeyListener();
 		ObserverButton go = new ObserverButton("Weiter", input, box);
 
@@ -79,7 +79,7 @@ public class NewOutputWindow {
 			}
 		});
 
-		go.addActionListener(new ObservableComboBoxListener(box));
+		go.addActionListener(new ObservableComboBoxListener());
 
 		JOptionPane.showOptionDialog(view, panel, "Neue Auslieferung", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
