@@ -324,7 +324,7 @@ public class Controller {
 			Object[][] temp = new Object[0][data[0].length];
 			for (int i = 0; i < data.length; i++) {
 				for (int j = 0; j < data[i].length; j++) {
-					if (data[i][j].equals(warehouse.getName())) {
+					if (warehouse.getName().equals(data[i][j])) {
 
 						Object[][] temp2 = new Object[temp.length + 1][data[0].length];
 						for (int k = 0; k < temp.length; k++) {
@@ -334,7 +334,7 @@ public class Controller {
 						}
 
 						for (int j2 = 0; j2 < data[i].length; j2++) {
-							temp2[i][j2] = data[i][j2];
+							temp2[temp2.length - 1][j2] = data[i][j2];
 						}
 
 						temp = temp2;
@@ -370,7 +370,7 @@ public class Controller {
 						}
 
 						for (int j2 = 0; j2 < data[i].length; j2++) {
-							temp2[i][j2] = data[i][j2];
+							temp2[temp2.length - 1][j2] = data[i][j2];
 						}
 
 						temp = temp2;
