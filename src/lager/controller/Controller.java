@@ -342,7 +342,7 @@ public class Controller {
 					}
 				}
 			}
-			return temp;
+			return (temp.length > 0) ? temp : null;
 		}
 		return null;
 	}
@@ -378,7 +378,7 @@ public class Controller {
 					}
 				}
 			}
-			return temp;
+			return (temp.length > 0) ? temp : null;
 		}
 		return null;
 	}

@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -92,7 +93,6 @@ public class View extends JFrame {
 				chooser.setFileFilter(filter);
 				int returnVal = chooser.showSaveDialog(View.this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					System.out.println("Sie haben diese Datei gespeichert:" + chooser.getSelectedFile().getName());
 					try {
 						controller.save(new File(chooser.getSelectedFile().toString() + ".lsd"));
 					} catch (Exception e1) {
@@ -107,11 +107,25 @@ public class View extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("Lagersystemdatei", ".lsd");
-				chooser.setFileFilter(filter);
+				chooser.addChoosableFileFilter(new FileFilter() {
+
+					@Override
+					public String getDescription() {
+						return "Lagersystemdatei (*.lsd)";
+					}
+
+					@Override
+					public boolean accept(File f) {
+						if (f.isDirectory()) {
+							return true;
+						} else {
+							return f.getName().toLowerCase().endsWith(".lsd");
+						}
+					}
+				});
+
 				int returnVal = chooser.showOpenDialog(View.this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					System.out.println("Sie haben diese Datei göffnet:" + chooser.getSelectedFile().getName());
 					try {
 						controller.load(chooser.getSelectedFile());
 					} catch (Exception e1) {
