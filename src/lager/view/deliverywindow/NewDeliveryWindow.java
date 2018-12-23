@@ -42,7 +42,7 @@ public class NewDeliveryWindow {
 	public int amountPane() {
 		JPanel panel = new JPanel();
 		ObserverButton go = new ObserverButton("Weiter");
-		JButton back = new JButton("Zurueck");
+		JButton back = new JButton("Zurück");
 		back.setEnabled(false);
 		JButton cancel = new JButton("Abbrechen");
 		JLabel amount = new JLabel("Menge:");
@@ -106,7 +106,7 @@ public class NewDeliveryWindow {
 		JPanel innerPanel = new JPanel();
 		JComboBox<Object> box = new JComboBox<Object>(view.getAllFreeSpaceLeafs());
 		ObserverButton go = new ObserverButton("Weiter");
-		ObserverButton back = new ObserverButton("Zurueck");
+		ObserverButton back = new ObserverButton("Zurück");
 		ObservableComboBoxListener boxListener = new ObservableComboBoxListener(box);
 		ObserverJSlider slider = new ObserverJSlider(0, 100, 100, amount);
 		ObservableChangeListener sliderListener = new ObservableChangeListener(slider);

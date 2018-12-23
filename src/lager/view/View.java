@@ -279,7 +279,7 @@ public class View extends JFrame {
 
 						JOptionPane.showMessageDialog(View.this, panel, "Bestand", JOptionPane.INFORMATION_MESSAGE);
 					} else {
-						JOptionPane.showMessageDialog(View.this, w.getChildStock(), "Bestand",
+						JOptionPane.showMessageDialog(View.this, "Aktueller Bestand:" + w.getChildStock(), "Bestand",
 								JOptionPane.INFORMATION_MESSAGE);
 					}
 				} else {
